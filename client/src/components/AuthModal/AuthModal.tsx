@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { loginSchema, registerSchema } from "../../validation/auth.validation";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -10,9 +14,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
+  const handleOnClose = (): void => {
+    setMode("login");
+    onClose();
+  };
+
   return (
     <div
-      onClick={onClose}
+      onClick={handleOnClose}
       className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30"
     >
       <div
@@ -34,28 +43,54 @@ interface AuthFormProps {
 }
 
 const Login: React.FC<AuthFormProps> = ({ switchTo }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = (data: { email: string; password: string }) => {
+    console.log("Login data", data);
+  };
+
   return (
-    <form>
-      <div className="flex flex-col gap-6 ">
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="flex flex-col gap-6">
         <h2 className="text-center text-2xl font-bold">UP-load</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          name="email"
-          className="border border-gray-300 p-2 rounded"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="border border-gray-300 p-2 rounded"
-        />
+
+        <div className="flex flex-col gap-1">
+          <input
+            type="email"
+            placeholder="Email"
+            {...register("email")}
+            className={`border p-2 rounded ${
+              errors.email ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.email && (
+            <span className="text-red-500 text-sm mb-[-15px]">
+              {errors.email.message}
+            </span>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <input
+            type="password"
+            placeholder="Password"
+            {...register("password")}
+            className="border p-2 rounded "
+          />
+        </div>
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
         >
           Login
         </button>
+
         <div
           onClick={switchTo}
           className="text-center cursor-pointer hover:underline"
@@ -68,34 +103,82 @@ const Login: React.FC<AuthFormProps> = ({ switchTo }) => {
 };
 
 const Register: React.FC<AuthFormProps> = ({ switchTo }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const onSubmit = (data: {
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }) => {
+    console.log("Register data", data);
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-6">
         <h2 className="text-center text-2xl font-bold">UP-load</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          name="email"
-          className="border border-gray-300 p-2 rounded"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="border border-gray-300 p-2 rounded"
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          className="border border-gray-300 p-2 rounded"
-        />
+
+        <div className="flex flex-col gap-1">
+          <input
+            type="email"
+            placeholder="Email"
+            {...register("email")}
+            className={`border p-2 rounded ${
+              errors.email ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.email && (
+            <span className="text-red-500 text-sm mb-[-15px]">
+              {errors.email.message}
+            </span>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <input
+            type="password"
+            placeholder="Password"
+            {...register("password")}
+            className={`border p-2 rounded ${
+              errors.password ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.password && (
+            <span className="text-red-500 text-sm mb-[-15px]">
+              {errors.password.message}
+            </span>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            {...register("confirmPassword")}
+            className={`border p-2 rounded  ${
+              errors.confirmPassword ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.confirmPassword && (
+            <span className="text-red-500 text-sm mb-[-15px]">
+              {errors.confirmPassword.message}
+            </span>
+          )}
+        </div>
+
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
         >
           Register
         </button>
+
         <div
           onClick={switchTo}
           className="text-center cursor-pointer hover:underline"
