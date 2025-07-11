@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { loginSchema, registerSchema } from "../../validation/auth.validation";
+import { LoginData, RegisterData } from "../../types/auth";
+import { loginUser, registerUser } from "../../api/api";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -46,13 +48,30 @@ const Login: React.FC<AuthFormProps> = ({ switchTo }) => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: { email: string; password: string }) => {
-    console.log("Login data", data);
+  const onSubmit = async (data: LoginData) => {
+    try {
+      const response = await loginUser(data);
+      console.log(response.data);
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        const serverErrors = error.response.data.errors;
+
+        Object.entries(serverErrors).forEach(([field, messages]) => {
+          setError(field as keyof LoginData, {
+            type: "server",
+            message: (messages as string[]).join(", "),
+          });
+        });
+      } else {
+        console.error(error);
+      }
+    }
   };
 
   return (
@@ -106,17 +125,30 @@ const Register: React.FC<AuthFormProps> = ({ switchTo }) => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (data: {
-    email: string;
-    password: string;
-    confirmPassword: string;
-  }) => {
-    console.log("Register data", data);
+  const onSubmit = async (data: RegisterData) => {
+    try {
+      const response = await registerUser(data);
+      console.log(response.data);
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        const serverErrors = error.response.data.errors;
+
+        Object.entries(serverErrors).forEach(([field, messages]) => {
+          setError(field as keyof RegisterData, {
+            type: "server",
+            message: (messages as string[]).join(", "),
+          });
+        });
+      } else {
+        console.error(error);
+      }
+    }
   };
 
   return (
