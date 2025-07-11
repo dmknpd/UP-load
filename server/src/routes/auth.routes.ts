@@ -1,5 +1,8 @@
 import { Router } from "express";
 
+import { registerSchema, loginSchema } from "../validation/auth.validation";
+import { validate } from "../middleware/validate.middleware";
+
 import {
   register,
   login,
@@ -9,8 +12,8 @@ import {
 
 const router = Router();
 
-router.post("/register", register);
-router.post("/login", login);
+router.post("/register", validate(registerSchema), register);
+router.post("/login", validate(loginSchema), login);
 router.get("/refresh", refreshToken);
 router.post("/logout", logout);
 

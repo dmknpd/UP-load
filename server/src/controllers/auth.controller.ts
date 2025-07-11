@@ -15,7 +15,9 @@ export const register = async (req: Request, res: Response) => {
   try {
     const existing = await User.findOne({ email });
     if (existing) {
-      res.status(400).json({ message: "Email already used" });
+      res.status(400).json({
+        errors: { email: ["Email already used"] },
+      });
       return;
     }
 
@@ -37,7 +39,9 @@ export const login = async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
 
     if (!user || !(await user.comparePassword(password))) {
-      res.status(400).json({ message: "User doesn't exist or wrong password" });
+      res
+        .status(400)
+        .json({ errors: { email: ["User doesn't exist or wrong password"] } });
       return;
     } else {
       const refreshToken = generateRefreshToken(user._id, user.email);

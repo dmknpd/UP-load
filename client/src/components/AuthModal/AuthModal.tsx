@@ -41,10 +41,12 @@ const Login: React.FC<AuthFormProps> = ({ switchTo }) => {
         <input
           type="email"
           placeholder="Email"
+          name="email"
           className="border border-gray-300 p-2 rounded"
         />
         <input
           type="password"
+          name="password"
           placeholder="Password"
           className="border border-gray-300 p-2 rounded"
         />
@@ -73,15 +75,18 @@ const Register: React.FC<AuthFormProps> = ({ switchTo }) => {
         <input
           type="email"
           placeholder="Email"
+          name="email"
           className="border border-gray-300 p-2 rounded"
         />
         <input
           type="password"
+          name="password"
           placeholder="Password"
           className="border border-gray-300 p-2 rounded"
         />
         <input
           type="password"
+          name="confirmPassword"
           placeholder="Confirm Password"
           className="border border-gray-300 p-2 rounded"
         />
