@@ -108,7 +108,7 @@ export const refreshToken = async (req: Request, res: Response) => {
         maxAge: 7 * 24 * 60 * 60 * 1000, //7days
       });
 
-      res.status(200).json({ newAccessToken });
+      res.status(200).json({ accessToken: newAccessToken });
       return;
     }
   } catch (error: any) {

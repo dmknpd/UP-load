@@ -6,6 +6,8 @@ import { loginSchema, registerSchema } from "../../validation/auth.validation";
 import { LoginData, RegisterData } from "../../types/auth";
 import { loginUser, registerUser } from "../../api/api";
 
+import { useAuthStore } from "../../store/useAuthStore";
+
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -31,9 +33,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         className="bg-white p-8 rounded-md shadow-lg relative w-full max-w-md"
       >
         {mode === "login" ? (
-          <Login switchTo={() => setMode("register")} />
+          <Login switchTo={() => setMode("register")} onClose={handleOnClose} />
         ) : (
-          <Register switchTo={() => setMode("login")} />
+          <Register switchTo={() => setMode("login")} onClose={handleOnClose} />
         )}
       </div>
     </div>
@@ -42,9 +44,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
 interface AuthFormProps {
   switchTo: () => void;
+  onClose: () => void;
 }
 
-const Login: React.FC<AuthFormProps> = ({ switchTo }) => {
+const Login: React.FC<AuthFormProps> = ({ switchTo, onClose }) => {
   const {
     register,
     handleSubmit,
@@ -54,10 +57,14 @@ const Login: React.FC<AuthFormProps> = ({ switchTo }) => {
     resolver: zodResolver(loginSchema),
   });
 
+  const setToken = useAuthStore((state) => state.setToken);
+
   const onSubmit = async (data: LoginData) => {
     try {
       const response = await loginUser(data);
-      console.log(response.data);
+      const token = response.data.accessToken;
+      setToken(token);
+      onClose();
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
         const serverErrors = error.response.data.errors;
@@ -121,7 +128,7 @@ const Login: React.FC<AuthFormProps> = ({ switchTo }) => {
   );
 };
 
-const Register: React.FC<AuthFormProps> = ({ switchTo }) => {
+const Register: React.FC<AuthFormProps> = ({ switchTo, onClose }) => {
   const {
     register,
     handleSubmit,
