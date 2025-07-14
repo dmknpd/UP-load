@@ -1,12 +1,28 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+import { useAuthStore } from "../../store/useAuthStore";
+
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
 import AuthModal from "../AuthModal/AuthModal";
+import { logoutUser } from "../../api/apiAuth";
 
 const Header = () => {
+  const email = useAuthStore((state) => state.email);
+  const logout = useAuthStore((state) => state.logout);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch (error: any) {
+      console.error("Logout error: ", error.message);
+    } finally {
+      logout();
+    }
+  };
 
   return (
     <header className="fixed top-0 w-full bg-white py-2 shadow-md z-50">
@@ -21,10 +37,14 @@ const Header = () => {
             </Link>
           </li>
           <li className="hover:bg-blue-500 p-2 rounded-md text-black hover:text-white">
-            <LoginIcon
-              onClick={() => setIsAuthOpen(true)}
-              style={{ fontSize: 30 }}
-            />
+            {email ? (
+              <LogoutIcon onClick={handleLogout} style={{ fontSize: 30 }} />
+            ) : (
+              <LoginIcon
+                onClick={() => setIsAuthOpen(true)}
+                style={{ fontSize: 30 }}
+              />
+            )}
           </li>
         </ul>
       </div>

@@ -17,7 +17,7 @@ function setAccessToken(token: string): void {
 }
 
 function logout(): void {
-  useAuthStore.getState().clearAuth();
+  useAuthStore.getState().logout();
 }
 
 Api.interceptors.request.use(
