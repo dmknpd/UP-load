@@ -71,7 +71,7 @@ export const refreshToken = async (req: Request, res: Response) => {
   const cookies = req.cookies;
 
   if (!cookies?.jwt) {
-    res.status(401).json({ message: "Please log in to continue" });
+    res.status(401).json({ message: "Please login to continue" });
     return;
   }
 
@@ -85,8 +85,6 @@ export const refreshToken = async (req: Request, res: Response) => {
       res.status(403).json({ message: "Forbidden: User not found." });
       return;
     } else if (!user?.refreshTokens.includes(refreshTokenFromCookie)) {
-      user.refreshTokens = [];
-      await user.save();
       res.status(403).json({ message: "Access denied" });
       return;
     } else {
@@ -152,7 +150,7 @@ export const logout = async (req: Request, res: Response) => {
         sameSite: "lax",
         secure: NODE_ENV === "production",
       });
-      res.sendStatus(204);
+      res.status(200).json({ message: "Logged out successfully" });
       return;
     }
   } catch (error: any) {

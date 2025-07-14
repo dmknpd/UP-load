@@ -1,11 +1,28 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import { refreshToken } from "./api/apiAuth";
 
 import { useAuthStore } from "./store/useAuthStore";
 import Header from "./components/Header/Header";
 
 function App() {
+  const setToken = useAuthStore((state) => state.setToken);
   const email = useAuthStore((state) => state.email);
+
+  const handleTokenRefresh = async () => {
+    try {
+      const response = await refreshToken();
+      setToken(response.data.accessToken);
+    } catch (error: any) {
+      console.error("Error", error.message);
+    }
+  };
+
+  useEffect(() => {
+    handleTokenRefresh();
+  }, []);
+
   return (
     <BrowserRouter>
       <Header />

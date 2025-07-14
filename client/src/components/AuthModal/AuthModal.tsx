@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { loginSchema, registerSchema } from "../../validation/auth.validation";
 import { LoginData, RegisterData } from "../../types/auth";
-import { loginUser, registerUser } from "../../api/api";
+import { loginUser, registerUser } from "../../api/apiAuth";
 
 import { useAuthStore } from "../../store/useAuthStore";
 
