@@ -15,12 +15,22 @@ interface AuthModalProps {
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [mode, setMode] = useState<"login" | "register">("login");
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
   const handleOnClose = (): void => {
     setMode("login");
+    setSuccessMessage(null);
     onClose();
+  };
+
+  const switchToLogin = () => {
+    setMode("login");
+  };
+  const switchToRegister = () => {
+    setMode("register");
+    setSuccessMessage(null);
   };
 
   return (
@@ -33,21 +43,33 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         className="bg-white p-8 rounded-md shadow-lg relative w-full max-w-md"
       >
         {mode === "login" ? (
-          <Login switchTo={() => setMode("register")} onClose={handleOnClose} />
+          <Login
+            switchTo={switchToRegister}
+            onClose={handleOnClose}
+            successMessage={successMessage}
+          />
         ) : (
-          <Register switchTo={() => setMode("login")} onClose={handleOnClose} />
+          <Register
+            switchTo={switchToLogin}
+            setSuccessMessage={setSuccessMessage}
+          />
         )}
       </div>
     </div>
   );
 };
 
-interface AuthFormProps {
+interface LoginFormProps {
   switchTo: () => void;
   onClose: () => void;
+  successMessage: string | null;
 }
 
-const Login: React.FC<AuthFormProps> = ({ switchTo, onClose }) => {
+const Login: React.FC<LoginFormProps> = ({
+  switchTo,
+  onClose,
+  successMessage,
+}) => {
   const {
     register,
     handleSubmit,
@@ -87,6 +109,11 @@ const Login: React.FC<AuthFormProps> = ({ switchTo, onClose }) => {
         <h2 className="text-center text-2xl font-bold">UP-load</h2>
 
         <div className="flex flex-col gap-1">
+          {successMessage && (
+            <div className="text-green-600 font-semibold text-center mb-4">
+              {successMessage}
+            </div>
+          )}
           <input
             type="email"
             placeholder="Email"
@@ -128,7 +155,15 @@ const Login: React.FC<AuthFormProps> = ({ switchTo, onClose }) => {
   );
 };
 
-const Register: React.FC<AuthFormProps> = ({ switchTo, onClose }) => {
+interface RegisterFormProps {
+  switchTo: () => void;
+  setSuccessMessage: (message: string) => void;
+}
+
+const Register: React.FC<RegisterFormProps> = ({
+  switchTo,
+  setSuccessMessage,
+}) => {
   const {
     register,
     handleSubmit,
@@ -141,7 +176,8 @@ const Register: React.FC<AuthFormProps> = ({ switchTo, onClose }) => {
   const onSubmit = async (data: RegisterData) => {
     try {
       const response = await registerUser(data);
-      console.log(response.data);
+      setSuccessMessage?.(response.data.message);
+      switchTo();
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
         const serverErrors = error.response.data.errors;

@@ -7,8 +7,9 @@ import { useAuthStore } from "./store/useAuthStore";
 import Header from "./components/Header/Header";
 
 function App() {
-  const setToken = useAuthStore((state) => state.setToken);
+  const token = useAuthStore((state) => state.accessToken);
   const email = useAuthStore((state) => state.email);
+  const setToken = useAuthStore((state) => state.setToken);
 
   const handleTokenRefresh = async () => {
     try {
@@ -20,7 +21,9 @@ function App() {
   };
 
   useEffect(() => {
-    handleTokenRefresh();
+    if (!token) {
+      handleTokenRefresh();
+    }
   }, []);
 
   return (
