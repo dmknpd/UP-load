@@ -18,7 +18,7 @@ export const authenticateTokenMiddleware = (
       const user = verifyAccessToken(token);
       next();
     } catch (error) {
-      res.status(403).json({ message: "Access denied" });
+      res.status(401).json({ message: "Please log in to continue" });
     }
   }
 };

@@ -82,7 +82,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     const user = await User.findById(decoded.userId);
     if (!user) {
-      res.status(403).json({ message: "Forbidden: User not found." });
+      res.status(401).json({ message: "User not found (unauthorized)" });
       return;
     } else if (!user?.refreshTokens.includes(refreshTokenFromCookie)) {
       res.status(403).json({ message: "Access denied" });
@@ -111,7 +111,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     }
   } catch (error: any) {
     console.error(error.message);
-    res.status(403).json({ message: "Access denied" });
+    res.status(401).json({ message: "Please login to continue" });
     return;
   }
 };

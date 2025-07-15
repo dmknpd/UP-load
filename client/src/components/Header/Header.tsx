@@ -38,11 +38,16 @@ const Header = () => {
           </li>
           <li className="hover:bg-blue-500 p-2 rounded-md text-black hover:text-white">
             {email ? (
-              <LogoutIcon onClick={handleLogout} style={{ fontSize: 30 }} />
+              <LogoutIcon
+                onClick={handleLogout}
+                style={{ fontSize: 30 }}
+                className="cursor-pointer"
+              />
             ) : (
               <LoginIcon
                 onClick={() => setIsAuthOpen(true)}
                 style={{ fontSize: 30 }}
+                className="cursor-pointer"
               />
             )}
           </li>

@@ -28,6 +28,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const switchToLogin = () => {
     setMode("login");
   };
+
   const switchToRegister = () => {
     setMode("register");
     setSuccessMessage(null);

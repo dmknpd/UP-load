@@ -24,7 +24,7 @@ function App() {
     if (!token) {
       handleTokenRefresh();
     }
-  }, []);
+  }, [token]);
 
   return (
     <BrowserRouter>
