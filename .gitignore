@@ -6,4 +6,5 @@ node_modules/
 static/
 dist/
 build/
+uploads/
 .DS_Store

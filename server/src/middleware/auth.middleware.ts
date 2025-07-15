@@ -1,9 +1,10 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 
 import { verifyAccessToken } from "../utils/tokenUtils";
+import { RequestWithUserId } from "../types/req";
 
 export const authenticateTokenMiddleware = (
-  req: Request,
+  req: RequestWithUserId,
   res: Response,
   next: NextFunction
 ) => {
@@ -16,6 +17,7 @@ export const authenticateTokenMiddleware = (
   } else {
     try {
       const user = verifyAccessToken(token);
+      req.userId = user.userId;
       next();
     } catch (error) {
       res.status(401).json({ message: "Please log in to continue" });
