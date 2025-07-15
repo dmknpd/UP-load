@@ -31,26 +31,30 @@ const Header = () => {
           <h1 className="text-lg sm:text-xl font-semibold">UP-load</h1>
         </Link>
         <ul className="flex gap-4 sm:gap-6 items-center">
-          <li className="hover:bg-blue-500 p-2 rounded-md text-black hover:text-white">
-            <Link to="/">
-              <FileUploadIcon style={{ fontSize: 30 }} />
-            </Link>
-          </li>
-          <li className="hover:bg-blue-500 p-2 rounded-md text-black hover:text-white">
-            {email ? (
-              <LogoutIcon
-                onClick={handleLogout}
-                style={{ fontSize: 30 }}
-                className="cursor-pointer"
-              />
-            ) : (
+          {email ? (
+            <>
+              <li className="hover:bg-blue-500 p-2 rounded-md text-black hover:text-white">
+                <Link to="/">
+                  <FileUploadIcon style={{ fontSize: 30 }} />
+                </Link>
+              </li>
+              <li className="hover:bg-blue-500 p-2 rounded-md text-black hover:text-white">
+                <LogoutIcon
+                  onClick={handleLogout}
+                  style={{ fontSize: 30 }}
+                  className="cursor-pointer"
+                />
+              </li>
+            </>
+          ) : (
+            <li className="hover:bg-blue-500 p-2 rounded-md text-black hover:text-white">
               <LoginIcon
                 onClick={() => setIsAuthOpen(true)}
                 style={{ fontSize: 30 }}
                 className="cursor-pointer"
               />
-            )}
-          </li>
+            </li>
+          )}
         </ul>
       </div>
 
