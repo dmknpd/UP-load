@@ -41,7 +41,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white p-8 rounded-md shadow-lg relative w-full max-w-md"
+        className="bg-white p-14 rounded-md shadow-lg relative w-full max-w-md"
       >
         {mode === "login" ? (
           <Login

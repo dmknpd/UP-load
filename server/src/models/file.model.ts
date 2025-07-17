@@ -6,6 +6,7 @@ export interface IFile extends Document {
   path: string;
   mimetype: string;
   size: number;
+  isPublic: boolean;
   createdAt: Date;
 }
 
@@ -15,6 +16,7 @@ const FileSchema: Schema<IFile> = new Schema({
   path: { type: String, required: true },
   mimetype: { type: String, required: true },
   size: { type: Number, required: true },
+  isPublic: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
 });
 

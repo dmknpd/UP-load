@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 import { refreshToken } from "./api/apiAuth";
 
 import { useAuthStore } from "./store/useAuthStore";
 import Header from "./components/Header/Header";
+import Upload from "./components/Upload/Upload";
 
 function App() {
   const token = useAuthStore((state) => state.accessToken);
@@ -29,9 +30,10 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <main className="py-16 px-4 container mx-auto">
+      <main className="py-20 px-4 h-screen container mx-auto">
         <Routes>
           <Route path="/" element={<div>{email ? email : "NONE"}</div>} />
+          <Route path="/upload" element={<Upload />} />
         </Routes>
       </main>
     </BrowserRouter>

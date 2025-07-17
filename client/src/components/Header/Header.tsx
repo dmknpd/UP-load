@@ -33,26 +33,26 @@ const Header = () => {
         <ul className="flex gap-4 sm:gap-6 items-center">
           {email ? (
             <>
-              <li className="hover:bg-blue-500 p-2 rounded-md text-black hover:text-white">
-                <Link to="/">
+              <li className="hover:bg-blue-500 p-2 rounded-md text-black cursor-pointer hover:text-white">
+                <Link to="/upload">
                   <FileUploadIcon style={{ fontSize: 30 }} />
                 </Link>
               </li>
-              <li className="hover:bg-blue-500 p-2 rounded-md text-black hover:text-white">
-                <LogoutIcon
-                  onClick={handleLogout}
-                  style={{ fontSize: 30 }}
-                  className="cursor-pointer"
-                />
+              <li className="hover:bg-blue-500 p-2 rounded-md text-black cursor-pointer hover:text-white ">
+                <Link to="/" className="text-[20px]">
+                  {email}
+                </Link>
+              </li>
+              <li className="hover:bg-blue-500 p-2 rounded-md  text-black cursor-pointer hover:text-white">
+                <LogoutIcon onClick={handleLogout} style={{ fontSize: 30 }} />
               </li>
             </>
           ) : (
-            <li className="hover:bg-blue-500 p-2 rounded-md text-black hover:text-white">
-              <LoginIcon
-                onClick={() => setIsAuthOpen(true)}
-                style={{ fontSize: 30 }}
-                className="cursor-pointer"
-              />
+            <li
+              onClick={() => setIsAuthOpen(true)}
+              className="hover:bg-blue-500 p-2 rounded-md text-black cursor-pointer hover:text-white"
+            >
+              <LoginIcon style={{ fontSize: 30 }} />
             </li>
           )}
         </ul>
