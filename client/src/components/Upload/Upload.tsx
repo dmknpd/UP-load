@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 
+import { uploadFile } from "../../api/apiUpload";
+
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import fileImg from "../../assets/img/file.svg";
-import { uploadFile } from "../../api/apiUpload";
 
 const Upload = () => {
   const [dragActive, setDragActive] = useState<boolean>(false);

@@ -6,6 +6,7 @@ import { refreshToken } from "./api/apiAuth";
 import { useAuthStore } from "./store/useAuthStore";
 import Header from "./components/Header/Header";
 import Upload from "./components/Upload/Upload";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   const token = useAuthStore((state) => state.accessToken);
@@ -33,7 +34,10 @@ function App() {
       <main className="py-20 px-4 h-screen container mx-auto">
         <Routes>
           <Route path="/" element={<div>{email ? email : "NONE"}</div>} />
-          <Route path="/upload" element={<Upload />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="/upload" element={<Upload />} />
+          </Route>
         </Routes>
       </main>
     </BrowserRouter>
