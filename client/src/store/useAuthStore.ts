@@ -11,13 +11,16 @@ interface DecodedToken {
 interface AuthState {
   accessToken: string | null;
   email: string | null;
+  isLoading: boolean;
   setToken: (token: string) => void;
+  setIsLoading: (loading: boolean) => void;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   email: null,
+  isLoading: true,
 
   setToken: (token: string) => {
     try {
@@ -26,6 +29,10 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch (error: any) {
       console.error("Error decoding token: ", error.message);
     }
+  },
+
+  setIsLoading: (loading: boolean) => {
+    set({ isLoading: loading });
   },
 
   logout: () => {

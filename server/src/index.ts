@@ -5,14 +5,16 @@ import mongoose from "mongoose";
 import path from "path";
 
 import authRoutes from "./routes/auth.routes";
-import uploadRoutes from "./routes/upload.routes";
+import fileRoutes from "./routes/file.routes";
 
 import { PORT, MONGO_URI } from "./config/config";
+import { multerErrorHandler } from "./middleware/multer.middleware";
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 app.use(
@@ -22,7 +24,10 @@ app.use(
   })
 );
 
-app.use("/api", [authRoutes, uploadRoutes]);
+app.use("/api/auth", authRoutes);
+app.use("/api/files", fileRoutes);
+
+app.use(multerErrorHandler);
 
 mongoose
   .connect(MONGO_URI)

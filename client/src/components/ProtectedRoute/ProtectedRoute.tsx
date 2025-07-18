@@ -4,6 +4,10 @@ import { useAuthStore } from "../../store/useAuthStore";
 
 const ProtectedRoute = () => {
   const token = useAuthStore((state) => state.accessToken);
+  const isLoading = useAuthStore((state) => state.isLoading);
+
+  if (isLoading) return null;
+
   return token ? <Outlet /> : <Navigate to="/" replace />;
 };
 

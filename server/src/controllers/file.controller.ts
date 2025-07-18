@@ -35,7 +35,15 @@ const fileFilter = (
   }
 };
 
-export const upload = multer({ storage, fileFilter });
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 5 MB
+
+export const upload = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: MAX_FILE_SIZE,
+  },
+});
 
 export const uploadFile = async (req: RequestWithUserId, res: Response) => {
   const userId = req.userId;

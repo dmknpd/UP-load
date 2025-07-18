@@ -2,16 +2,17 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuthStore } from "../../store/useAuthStore";
+import AuthModal from "../AuthModal/AuthModal";
+import { logoutUser } from "../../api/apiAuth";
 
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import AuthModal from "../AuthModal/AuthModal";
-import { logoutUser } from "../../api/apiAuth";
 
 const Header = () => {
   const email = useAuthStore((state) => state.email);
   const logout = useAuthStore((state) => state.logout);
+  const isLoading = useAuthStore((state) => state.isLoading);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -31,7 +32,11 @@ const Header = () => {
           <h1 className="text-lg sm:text-xl font-semibold">UP-load</h1>
         </Link>
         <ul className="flex gap-4 sm:gap-6 items-center">
-          {email ? (
+          {isLoading ? (
+            <li className="p-4 mr-28">
+              <div className="dots"></div>
+            </li>
+          ) : email ? (
             <>
               <li className="hover:bg-blue-500 p-2 rounded-md text-black cursor-pointer hover:text-white">
                 <Link to="/upload">

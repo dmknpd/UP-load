@@ -9,6 +9,8 @@ const Upload = () => {
   const [dragActive, setDragActive] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>(fileImg);
+  const [fileSuccess, setFileSuccess] = useState<string>("");
+  const [fileError, setFileError] = useState<string>("");
 
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
@@ -34,6 +36,8 @@ const Upload = () => {
   };
 
   const handleFiles = (files: FileList | null) => {
+    setFileSuccess("");
+    setFileError("");
     if (!files || files.length === 0) {
       setFile(null);
       setPreviewUrl(fileImg);
@@ -69,9 +73,14 @@ const Upload = () => {
     try {
       const response = await uploadFile(formData);
       handleFiles(null);
+      setFileSuccess(response.data.message);
       console.log("File uploaded successfully");
     } catch (error: any) {
-      console.log(`Error uploading file: ${error.message}`);
+      if (error.response?.data?.errors?.file) {
+        setFileError(error.response.data.errors.file.join(", "));
+      } else {
+        setFileError("Unknown error occurred");
+      }
     }
   };
 
@@ -117,6 +126,14 @@ const Upload = () => {
 
         <input type="file" onChange={handleFileChange} className="hidden" />
       </label>
+
+      {fileSuccess && (
+        <div className="text-green-600 font-semibold text-center mb-8">
+          {fileSuccess}
+        </div>
+      )}
+
+      {fileError && <div className="text-red-500 mb-8">{fileError}</div>}
 
       <button
         onClick={handleUpload}

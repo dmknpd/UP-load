@@ -10,8 +10,9 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   const token = useAuthStore((state) => state.accessToken);
-  const email = useAuthStore((state) => state.email);
   const setToken = useAuthStore((state) => state.setToken);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const setIsLoading = useAuthStore((state) => state.setIsLoading);
 
   const handleTokenRefresh = async () => {
     try {
@@ -19,11 +20,14 @@ function App() {
       setToken(response.data.accessToken);
     } catch (error: any) {
       console.error("Error", error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     if (!token) {
+      setIsLoading(true);
       handleTokenRefresh();
     }
   }, [token]);
@@ -32,13 +36,19 @@ function App() {
     <BrowserRouter>
       <Header />
       <main className="py-20 px-4 h-screen container mx-auto">
-        <Routes>
-          <Route path="/" element={<div>{email ? email : "NONE"}</div>} />
+        {isLoading ? (
+          <div className="h-full flex items-center justify-center">
+            <div className="spinner"></div>
+          </div>
+        ) : (
+          <Routes>
+            <Route path="/" element={<div>Main</div>} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route path="/upload" element={<Upload />} />
-          </Route>
-        </Routes>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/upload" element={<Upload />} />
+            </Route>
+          </Routes>
+        )}
       </main>
     </BrowserRouter>
   );
