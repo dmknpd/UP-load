@@ -27,6 +27,11 @@
   }
 }
 
+.spinner-small {
+  width: 50px;
+  padding: 8px;
+}
+
 .dots {
   width: 60px;
   aspect-ratio: 4;

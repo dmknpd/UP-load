@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
+import { Buffer } from "buffer";
 
 import File from "../models/file.model";
 
@@ -53,9 +54,15 @@ export const uploadFile = async (req: RequestWithUserId, res: Response) => {
     return;
   } else {
     try {
+      const originalnameUtf8 = Buffer.from(
+        req.file.originalname,
+        "latin1"
+      ).toString("utf8");
+
       const fileDoc = new File({
         user: userId,
         filename: req.file.filename,
+        originalname: originalnameUtf8,
         path: `/uploads/user_${userId}/${req.file.filename}`,
         mimetype: req.file.mimetype,
         size: req.file.size,
@@ -74,6 +81,39 @@ export const uploadFile = async (req: RequestWithUserId, res: Response) => {
       res.status(500).json({ message: "Error saving file" });
       return;
     }
+  }
+};
+
+export const getFile = async (req: RequestWithUserId, res: Response) => {
+  const { filename } = req.params;
+  const userId = req.userId;
+
+  try {
+    const file = await File.findOne({ filename });
+
+    if (!file) {
+      res.status(404).json({ message: "File not found" });
+      return;
+    }
+
+    if (!file.isPublic && file.user.toString() !== userId) {
+      res.status(403).json({ message: "Access denied" });
+      return;
+    }
+
+    const filePath = path.resolve("uploads", `user_${file.user}`, filename);
+
+    if (!fs.existsSync(filePath)) {
+      res.status(404).json({ message: "File does not exist" });
+      return;
+    }
+
+    res.sendFile(filePath);
+    return;
+  } catch (error) {
+    console.error("Error serving file:", error);
+    res.status(500).json({ message: "Server error" });
+    return;
   }
 };
 
