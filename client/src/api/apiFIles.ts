@@ -6,3 +6,5 @@ export const uploadFile = (data: FormData) =>
       "Content-Type": "multipart/form-data",
     },
   });
+
+export const getUserFiles = () => Api.get("/files/");

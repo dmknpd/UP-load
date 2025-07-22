@@ -44,7 +44,7 @@ const Header = () => {
                 </Link>
               </li>
               <li className="hover:bg-blue-500 p-2 rounded-md text-black cursor-pointer hover:text-white ">
-                <Link to="/" className="text-[20px]">
+                <Link to="/my-files" className="text-[20px]">
                   {email}
                 </Link>
               </li>

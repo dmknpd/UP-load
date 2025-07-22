@@ -7,6 +7,7 @@ import { useAuthStore } from "./store/useAuthStore";
 import Header from "./components/Header/Header";
 import Upload from "./components/Upload/Upload";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import UserFilesList from "./components/User/UserFiles/UserFilesList";
 
 function App() {
   const token = useAuthStore((state) => state.accessToken);
@@ -35,7 +36,7 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <main className="py-20 px-4 h-screen container mx-auto">
+      <main className="py-24 px-4 h-screen container mx-auto">
         {isLoading ? (
           <div className="h-full flex items-center justify-center">
             <div className="spinner"></div>
@@ -46,6 +47,7 @@ function App() {
 
             <Route element={<ProtectedRoute />}>
               <Route path="/upload" element={<Upload />} />
+              <Route path="/my-files" element={<UserFilesList />} />
             </Route>
           </Routes>
         )}

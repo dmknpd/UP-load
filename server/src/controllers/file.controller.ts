@@ -35,7 +35,7 @@ const fileFilter = (
   }
 };
 
-const MAX_FILE_SIZE = 1 * 1024 * 1024; // 5 MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
 export const upload = multer({
   storage,
@@ -81,7 +81,9 @@ export const getUserFiles = async (req: RequestWithUserId, res: Response) => {
   const userId = req.userId;
 
   try {
-    const files = await File.find({ user: userId }).sort({ createdAt: -1 });
+    const files = await File.find({ user: userId })
+      .sort({ createdAt: -1 })
+      .select("-user -__v");
 
     res.status(200).json({ files });
     return;

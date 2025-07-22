@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { uploadFile } from "../../api/apiUpload";
+import { uploadFile } from "../../api/apiFIles";
 
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import fileImg from "../../assets/img/file.svg";
