@@ -76,3 +76,18 @@ export const uploadFile = async (req: RequestWithUserId, res: Response) => {
     }
   }
 };
+
+export const getUserFiles = async (req: RequestWithUserId, res: Response) => {
+  const userId = req.userId;
+
+  try {
+    const files = await File.find({ user: userId }).sort({ createdAt: -1 });
+
+    res.status(200).json({ files });
+    return;
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error receiving  file" });
+    return;
+  }
+};
