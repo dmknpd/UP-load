@@ -8,7 +8,9 @@ export const uploadFile = (data: FormData) =>
   });
 
 export const getUserFiles = () => Api.get("/files/");
-export const getFile = (filename: string) =>
+export const downloadFile = (filename: string) =>
   Api.get(`/files/download/${filename}`, {
     responseType: "blob",
   });
+
+export const getFileDetails = (fileId: string) => Api.get(`files/${fileId}`);
