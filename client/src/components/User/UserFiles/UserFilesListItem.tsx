@@ -21,6 +21,7 @@ const UserFilesListItem: React.FC<Props> = ({ file }) => {
         setImgUrl(imageUrl);
       } catch (error: any) {
         console.error("Error fetching files", error);
+        setImgUrl(fileImg);
       }
     } else {
       setImgUrl(fileImg);
