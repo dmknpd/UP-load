@@ -48,7 +48,7 @@ function App() {
 
             <Route element={<ProtectedRoute />}>
               <Route path="/upload" element={<Upload />} />
-              <Route path="/my-files" element={<UserFilesList />} />
+              <Route path="/my_files" element={<UserFilesList />} />
               <Route path="/:fileId" element={<UserFileDetails />} />
             </Route>
           </Routes>

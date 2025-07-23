@@ -35,10 +35,11 @@ const UserFileDetails = () => {
       } catch (error: any) {
         console.error("Error fetching file img", error);
         setImgUrl(fileImg);
+      } finally {
+        setLoading(false);
       }
     } else {
       setImgUrl(fileImg);
-      setLoading(false);
     }
   };
 
@@ -66,6 +67,12 @@ const UserFileDetails = () => {
     if (fileId) {
       getFile();
     }
+
+    return () => {
+      if (imgUrl) {
+        URL.revokeObjectURL(imgUrl);
+      }
+    };
   }, [fileId]);
 
   useEffect(() => {
@@ -84,7 +91,11 @@ const UserFileDetails = () => {
   }
 
   if (!file) {
-    return <div className="text-center text-red-500">File not found</div>;
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center text-2xl text-red-500">File not found</div>
+      </div>
+    );
   }
 
   return (

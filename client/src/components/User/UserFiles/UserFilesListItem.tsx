@@ -24,24 +24,24 @@ const UserFilesListItem: React.FC<Props> = ({ file }) => {
         console.error("Error fetching file img", error);
         setImgUrl(fileImg);
       }
-    } else {
-      setImgUrl(fileImg);
     }
   };
 
   useEffect(() => {
     getImg();
+
+    return () => {
+      if (imgUrl) {
+        URL.revokeObjectURL(imgUrl);
+      }
+    };
   }, []);
 
   return (
     <Link to={`/${file._id}`}>
-      <div className="border-2 rounded-lg overflow-hidden shadow-sm p-4 flex flex-col items-center justify-between gap-2">
+      <div className="border-2 rounded-lg overflow-hidden h-full shadow-sm p-4 flex flex-col items-center justify-between gap-2">
         <div className="flex items-center h-full">
-          {imgUrl ? (
-            <img src={imgUrl} alt="File" />
-          ) : (
-            <div className="spinner spinner-small"></div>
-          )}
+          <img src={imgUrl} alt="File" />
         </div>
         <p
           className="text-sm text-gray-700 break-words text-center"
