@@ -1,41 +1,34 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { downloadFile } from "../../../api/apiFIles";
+import { useFileStore } from "../../../store/useFileStore";
 
 import { File } from "../../../types/files";
-
-import fileImg from "../../../assets/img/file.svg";
 
 interface Props {
   file: File;
 }
 
 const UserFilesListItem: React.FC<Props> = ({ file }) => {
+  const { fetchImage } = useFileStore();
   const [imgUrl, setImgUrl] = useState<string>("");
 
   const getImg = async () => {
-    if (file.mimetype.startsWith("image/")) {
-      try {
-        const response = await downloadFile(file._id);
-        const imageUrl = URL.createObjectURL(response.data);
-        setImgUrl(imageUrl);
-      } catch (error: any) {
-        console.error("Error fetching file img", error);
-        setImgUrl(fileImg);
-      }
-    }
+    if (!file) return;
+
+    const url = await fetchImage(file);
+    setImgUrl(url);
   };
 
   useEffect(() => {
-    getImg();
+    if (file) {
+      getImg();
+    }
 
     return () => {
-      if (imgUrl) {
-        URL.revokeObjectURL(imgUrl);
-      }
+      URL.revokeObjectURL(imgUrl);
     };
-  }, []);
+  }, [file]);
 
   return (
     <Link to={`/${file._id}`}>

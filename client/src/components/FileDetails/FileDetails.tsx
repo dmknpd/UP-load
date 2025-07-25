@@ -7,7 +7,8 @@ import {
   downloadFile,
   getFileDetails,
   updateFileDetails,
-} from "../../api/apiFIles";
+} from "../../api/apiFiles";
+import { useFileStore } from "../../store/useFileStore";
 
 import EditIcon from "@mui/icons-material/Edit";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
@@ -15,6 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 const FileDetails = () => {
   const { fileId } = useParams<{ fileId: string }>();
+  const { fetchImage, downloadFileAction } = useFileStore();
 
   const [file, setFile] = useState<File | null>(null);
   const [imgUrl, setImgUrl] = useState<string>(fileImg);
@@ -38,40 +40,15 @@ const FileDetails = () => {
   const getImg = async () => {
     if (!file) return;
 
-    if (file.mimetype.startsWith("image/")) {
-      try {
-        const response = await downloadFile(file._id);
-        const imageUrl = URL.createObjectURL(response.data);
-        setImgUrl(imageUrl);
-      } catch (error: any) {
-        console.error("Error fetching file img", error);
-        setImgUrl(fileImg);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      setImgUrl(fileImg);
-    }
+    const url = await fetchImage(file);
+    setImgUrl(url);
+    setLoading(false);
   };
 
   const handleDownloadFile = async () => {
     if (!file) return;
-    try {
-      const response = await downloadFile(file._id);
 
-      const url = URL.createObjectURL(response.data);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = file.originalname;
-      document.body.appendChild(link);
-      link.click();
-
-      link.remove();
-      URL.revokeObjectURL(url);
-    } catch (error: any) {
-      console.error("Error downloading file", error);
-    }
+    downloadFileAction(file);
   };
 
   const handleUpdateFileDetails = async (updatedFile: File) => {
@@ -114,6 +91,10 @@ const FileDetails = () => {
       getImg();
       setLoading(false);
     }
+
+    return () => {
+      URL.revokeObjectURL(imgUrl);
+    };
   }, [file]);
 
   if (loading) {

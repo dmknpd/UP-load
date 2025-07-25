@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { getUserFiles } from "../../../api/apiFIles";
+import { getUserFiles } from "../../../api/apiFiles";
 
 import { File } from "../../../types/files";
 
