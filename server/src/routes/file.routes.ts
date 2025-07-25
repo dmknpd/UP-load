@@ -1,9 +1,10 @@
 import { Router } from "express";
 
 import {
-  getFileById,
-  getUserFiles,
+  getFileDetailsById,
+  getUserFilesDetails,
   serveFileByName,
+  updateFileDetails,
   upload,
   uploadFile,
 } from "../controllers/file.controller";
@@ -11,9 +12,11 @@ import { authenticateTokenMiddleware } from "../middleware/auth.middleware";
 
 const router = Router();
 
-router.get("/", authenticateTokenMiddleware, getUserFiles);
-router.get("/:id", authenticateTokenMiddleware, getFileById);
-router.get("/download/:filename", authenticateTokenMiddleware, serveFileByName);
+router.get("/", authenticateTokenMiddleware, getUserFilesDetails);
+router.get("/:id", authenticateTokenMiddleware, getFileDetailsById);
+router.get("/download/:id", authenticateTokenMiddleware, serveFileByName);
+router.patch("/update/:id", authenticateTokenMiddleware, updateFileDetails);
+
 router.post(
   "/upload",
   authenticateTokenMiddleware,

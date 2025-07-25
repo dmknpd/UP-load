@@ -3,7 +3,11 @@ import { useParams } from "react-router-dom";
 
 import { File } from "../../types/files";
 import fileImg from "../../assets/img/file.svg";
-import { downloadFile, getFileDetails } from "../../api/apiFIles";
+import {
+  downloadFile,
+  getFileDetails,
+  updateFileDetails,
+} from "../../api/apiFIles";
 
 import EditIcon from "@mui/icons-material/Edit";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
@@ -15,6 +19,8 @@ const FileDetails = () => {
   const [file, setFile] = useState<File | null>(null);
   const [imgUrl, setImgUrl] = useState<string>(fileImg);
   const [loading, setLoading] = useState<boolean>(true);
+  const [fileSuccess, setFileSuccess] = useState<string>("");
+  const [fileError, setFileError] = useState<string>("");
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const getFile = async () => {
@@ -34,7 +40,7 @@ const FileDetails = () => {
 
     if (file.mimetype.startsWith("image/")) {
       try {
-        const response = await downloadFile(file.filename);
+        const response = await downloadFile(file._id);
         const imageUrl = URL.createObjectURL(response.data);
         setImgUrl(imageUrl);
       } catch (error: any) {
@@ -51,7 +57,7 @@ const FileDetails = () => {
   const handleDownloadFile = async () => {
     if (!file) return;
     try {
-      const response = await downloadFile(file.filename);
+      const response = await downloadFile(file._id);
 
       const url = URL.createObjectURL(response.data);
 
@@ -68,10 +74,27 @@ const FileDetails = () => {
     }
   };
 
-  const onSave = (updatedFile: File) => {
-    setFile(updatedFile);
-    setEditMode(false);
-    // здесь можешь ещё вызвать API-запрос для обновления на сервере
+  const handleUpdateFileDetails = async (updatedFile: File) => {
+    if (!file) return;
+    setFileSuccess("");
+
+    try {
+      await updateFileDetails(file._id, {
+        originalname: updatedFile.originalname,
+        isPublic: updatedFile.isPublic,
+      });
+    } catch (error: any) {
+      console.error("Failed to update file", error);
+      if (error.response?.data?.errors?.file) {
+        setFileError(error.response.data.errors.file.join(", "));
+      } else {
+        setFileError("Unknown error occurred");
+      }
+    } finally {
+      setFile(updatedFile);
+      setEditMode(false);
+      setFileSuccess("File Updated Successfully");
+    }
   };
 
   useEffect(() => {
@@ -133,12 +156,18 @@ const FileDetails = () => {
         />
       </div>
       {editMode ? (
-        <EditFile imgUrl={imgUrl} file={file} onSave={onSave} />
+        <EditFile
+          imgUrl={imgUrl}
+          file={file}
+          onSave={handleUpdateFileDetails}
+          error={fileError}
+        />
       ) : (
         <FileInfo
           imgUrl={imgUrl}
           file={file}
           handleDownloadFile={handleDownloadFile}
+          fileSuccess={fileSuccess}
         />
       )}
     </div>
@@ -149,9 +178,10 @@ interface EditFileProps {
   imgUrl: string;
   file: File;
   onSave: (updatedFile: File) => void;
+  error: string;
 }
 
-const EditFile: React.FC<EditFileProps> = ({ imgUrl, file, onSave }) => {
+const EditFile: React.FC<EditFileProps> = ({ imgUrl, file, onSave, error }) => {
   const [name, setName] = useState(file.originalname);
   const [isPublic, setIsPublic] = useState(file.isPublic);
 
@@ -204,6 +234,8 @@ const EditFile: React.FC<EditFileProps> = ({ imgUrl, file, onSave }) => {
         </span>
       </div>
 
+      {error && <div className="text-red-500">{error}</div>}
+
       <button
         onClick={handleSubmit}
         className="mt-4 inline-block px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
@@ -218,12 +250,14 @@ interface FileInfoProps {
   imgUrl: string;
   file: File;
   handleDownloadFile: () => void;
+  fileSuccess: string;
 }
 
 const FileInfo: React.FC<FileInfoProps> = ({
   imgUrl,
   file,
   handleDownloadFile,
+  fileSuccess,
 }) => {
   return (
     <div className="flex flex-col items-center gap-4">
@@ -256,6 +290,12 @@ const FileInfo: React.FC<FileInfoProps> = ({
           {!file.isPublic ? "Yes" : "No"}
         </p>
       </div>
+
+      {fileSuccess && (
+        <div className="text-green-600 font-semibold text-center mb-8">
+          {fileSuccess}
+        </div>
+      )}
 
       <button
         onClick={handleDownloadFile}

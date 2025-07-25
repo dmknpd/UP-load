@@ -8,3 +8,8 @@ export interface File {
   isPublic: boolean;
   createdAt: Date;
 }
+
+export interface UpdateFileData {
+  originalname: string;
+  isPublic: boolean;
+}

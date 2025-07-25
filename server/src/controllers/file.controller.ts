@@ -88,11 +88,11 @@ export const serveFileByName = async (
   req: RequestWithUserId,
   res: Response
 ) => {
-  const { filename } = req.params;
+  const { id } = req.params;
   const userId = req.userId;
 
   try {
-    const file = await File.findOne({ filename });
+    const file = await File.findById(id);
 
     if (!file) {
       res.status(404).json({ message: "File not found" });
@@ -104,7 +104,11 @@ export const serveFileByName = async (
       return;
     }
 
-    const filePath = path.resolve("uploads", `user_${file.user}`, filename);
+    const filePath = path.resolve(
+      "uploads",
+      `user_${file.user}`,
+      file.filename
+    );
 
     if (!fs.existsSync(filePath)) {
       res.status(404).json({ message: "File does not exist" });
@@ -120,11 +124,13 @@ export const serveFileByName = async (
   }
 };
 
-export const getFileById = async (req: RequestWithUserId, res: Response) => {
+export const getFileDetailsById = async (
+  req: RequestWithUserId,
+  res: Response
+) => {
   const userId = req.userId;
   const fileId = req.params.id;
 
-  console.log("ID", fileId);
   try {
     const file = await File.findById(fileId);
 
@@ -147,7 +153,10 @@ export const getFileById = async (req: RequestWithUserId, res: Response) => {
   }
 };
 
-export const getUserFiles = async (req: RequestWithUserId, res: Response) => {
+export const getUserFilesDetails = async (
+  req: RequestWithUserId,
+  res: Response
+) => {
   const userId = req.userId;
 
   try {
@@ -160,6 +169,46 @@ export const getUserFiles = async (req: RequestWithUserId, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error receiving  file" });
+    return;
+  }
+};
+
+export const updateFileDetails = async (
+  req: RequestWithUserId,
+  res: Response
+) => {
+  const userId = req.userId;
+  const { id } = req.params;
+  const { isPublic, originalname } = req.body;
+
+  try {
+    const file = await File.findById(id);
+
+    if (!file) {
+      res.status(404).json({ message: "File not found" });
+      return;
+    }
+
+    if (file.user.toString() !== userId) {
+      res.status(403).json({ message: "Access denied" });
+      return;
+    }
+
+    if (typeof isPublic === "boolean") {
+      file.isPublic = isPublic;
+    }
+
+    if (typeof originalname === "string") {
+      file.originalname = originalname;
+    }
+
+    await file.save();
+
+    res.status(200).json({ file });
+    return;
+  } catch (error) {
+    console.error("Error updating file:", error);
+    res.status(500).json({ errors: { file: ["Error updating file"] } });
     return;
   }
 };

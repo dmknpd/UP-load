@@ -1,5 +1,7 @@
 import Api from "./api";
 
+import { UpdateFileData } from "../types/files";
+
 export const uploadFile = (data: FormData) =>
   Api.post("/files/upload", data, {
     headers: {
@@ -8,8 +10,11 @@ export const uploadFile = (data: FormData) =>
   });
 
 export const getUserFiles = () => Api.get("/files/");
-export const downloadFile = (filename: string) =>
-  Api.get(`/files/download/${filename}`, {
+export const updateFileDetails = (id: string, updatedFile: UpdateFileData) =>
+  Api.patch(`/files/update/${id}`, updatedFile);
+
+export const downloadFile = (id: string) =>
+  Api.get(`/files/download/${id}`, {
     responseType: "blob",
   });
 

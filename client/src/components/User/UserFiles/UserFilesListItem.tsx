@@ -17,7 +17,7 @@ const UserFilesListItem: React.FC<Props> = ({ file }) => {
   const getImg = async () => {
     if (file.mimetype.startsWith("image/")) {
       try {
-        const response = await downloadFile(file.filename);
+        const response = await downloadFile(file._id);
         const imageUrl = URL.createObjectURL(response.data);
         setImgUrl(imageUrl);
       } catch (error: any) {
