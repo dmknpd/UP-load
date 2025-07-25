@@ -8,7 +8,7 @@ import Header from "./components/Header/Header";
 import Upload from "./components/Upload/Upload";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import UserFilesList from "./components/User/UserFiles/UserFilesList";
-import UserFileDetails from "./components/User/UserFiles/UserFileDetails";
+import FileDetails from "./components/FileDetails/FileDetails";
 
 function App() {
   const token = useAuthStore((state) => state.accessToken);
@@ -49,7 +49,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/upload" element={<Upload />} />
               <Route path="/my_files" element={<UserFilesList />} />
-              <Route path="/:fileId" element={<UserFileDetails />} />
+              <Route path="/:fileId" element={<FileDetails />} />
             </Route>
           </Routes>
         )}
