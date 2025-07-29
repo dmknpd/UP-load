@@ -3,7 +3,7 @@ import Api from "./api";
 import { UpdateFileData } from "../types/files";
 
 //public
-export const getFileList = () => Api.get("/files/public");
+export const getPublicFileList = () => Api.get("/files/public");
 export const downloadPublicFile = (id: string) =>
   Api.get(`/files/public/download/${id}`, {
     responseType: "blob",

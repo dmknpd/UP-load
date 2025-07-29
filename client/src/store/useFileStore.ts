@@ -1,5 +1,10 @@
 import { create } from "zustand";
-import { downloadFile, downloadPublicFile } from "../api/apiFiles";
+import {
+  downloadFile,
+  downloadPublicFile,
+  getPublicFileList,
+  getUserFileList,
+} from "../api/apiFiles";
 
 import { File } from "../types/files";
 import fileImg from "../assets/img/file.svg";
@@ -8,6 +13,7 @@ interface FileStore {
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
   fetchImage: (file: File, isPublic?: boolean) => Promise<string>;
+  fetchFileList: (isPublic?: boolean) => Promise<File[]>;
   downloadFileAction: (file: File, isPublic?: boolean) => Promise<void>;
 }
 
@@ -32,6 +38,18 @@ export const useFileStore = create<FileStore>((set) => ({
     } catch (error) {
       console.error("Error fetching image", error);
       return fileImg;
+    }
+  },
+
+  fetchFileList: async (isPublic = false) => {
+    try {
+      const response = isPublic
+        ? await getPublicFileList()
+        : await getUserFileList();
+
+      return response.data.files;
+    } catch (error) {
+      console.error("Error fetching file list", error);
     }
   },
 

@@ -17,7 +17,8 @@ import UserFilesList from "./components/User/UserFiles/UserFilesList";
 function App() {
   const token = useAuthStore((state) => state.accessToken);
   const setToken = useAuthStore((state) => state.setToken);
-  const { isLoading, setIsLoading } = useFileStore();
+  const isLoading = useFileStore((state) => state.isLoading);
+  const setIsLoading = useFileStore((state) => state.setIsLoading);
   const isAuthOpen = useAuthStore((state) => state.isAuthOpen);
   const setIsAuthOpen = useAuthStore((state) => state.setIsAuthOpen);
 

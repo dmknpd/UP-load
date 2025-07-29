@@ -11,7 +11,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 const Header = () => {
   const email = useAuthStore((state) => state.email);
   const logout = useAuthStore((state) => state.logout);
-  const { isLoading } = useFileStore();
+  const isLoading = useFileStore((state) => state.isLoading);
+
   const setIsAuthOpen = useAuthStore((state) => state.setIsAuthOpen);
 
   const handleLogout = async () => {

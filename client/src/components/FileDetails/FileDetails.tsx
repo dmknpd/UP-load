@@ -22,7 +22,8 @@ const FileDetails = () => {
   const [imgUrl, setImgUrl] = useState<string>(fileImg);
   const [editMode, setEditMode] = useState<boolean>(false);
 
-  const { isLoading, setIsLoading } = useFileStore();
+  const isLoading = useFileStore((state) => state.isLoading);
+  const setIsLoading = useFileStore((state) => state.setIsLoading);
 
   const [fileSuccess, setFileSuccess] = useState<string>("");
   const [fileError, setFileError] = useState<string>("");

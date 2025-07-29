@@ -5,7 +5,7 @@ import { useFileStore } from "../../store/useFileStore";
 
 const ProtectedRoute = () => {
   const token = useAuthStore((state) => state.accessToken);
-  const { isLoading } = useFileStore();
+  const isLoading = useFileStore((state) => state.isLoading);
 
   if (isLoading) return null;
 

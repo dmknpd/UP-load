@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { getFileList } from "../../api/apiFiles";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useFileStore } from "../../store/useFileStore";
 
@@ -11,20 +10,19 @@ import FilesListItem from "../FileListItem/FileListItem";
 
 const PublicFilesList = () => {
   const [files, setFiles] = useState<File[]>([]);
-  const { isLoading, setIsLoading } = useFileStore();
+  const fetchFileList = useFileStore((state) => state.fetchFileList);
+
+  const isLoading = useFileStore((state) => state.isLoading);
+  const setIsLoading = useFileStore((state) => state.setIsLoading);
+
   const token = useAuthStore((state) => state.accessToken);
   const setIsAuthOpen = useAuthStore((state) => state.setIsAuthOpen);
 
   const getFiles = async () => {
-    try {
-      const response = await getFileList();
-      setFiles(response.data.files);
-      console.log("Files uploaded successfully");
-    } catch (error: any) {
-      console.error("Error fetching files", error);
-    } finally {
-      setIsLoading(false);
-    }
+    const response = await fetchFileList(true);
+    setFiles(response);
+    console.log("Files uploaded successfully");
+    setIsLoading(false);
   };
 
   useEffect(() => {
