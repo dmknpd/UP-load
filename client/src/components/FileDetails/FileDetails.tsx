@@ -3,12 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { File } from "../../types/files";
 import fileImg from "../../assets/img/file.svg";
-import {
-  deleteFileById,
-  getFileById,
-  updateFileById,
-} from "../../api/apiFiles";
+import { deleteFileById, updateFileById } from "../../api/apiFiles";
 import { useFileStore } from "../../store/useFileStore";
+import { useAuthStore } from "../../store/useAuthStore";
 
 import EditIcon from "@mui/icons-material/Edit";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
@@ -16,11 +13,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 const FileDetails = () => {
   const { fileId } = useParams<{ fileId: string }>();
-  const { fetchImage, downloadFileAction } = useFileStore();
+  const isAuth = useAuthStore((state) => !!state.accessToken);
+
+  const fetchImage = useFileStore((state) => state.fetchImage);
+  const downloadFileAction = useFileStore((state) => state.downloadFileAction);
 
   const [file, setFile] = useState<File | null>(null);
   const [imgUrl, setImgUrl] = useState<string>(fileImg);
   const [editMode, setEditMode] = useState<boolean>(false);
+
+  const fetchFile = useFileStore((state) => state.fetchFile);
 
   const isLoading = useFileStore((state) => state.isLoading);
   const setIsLoading = useFileStore((state) => state.setIsLoading);
@@ -32,20 +34,16 @@ const FileDetails = () => {
 
   const getFile = async () => {
     if (!fileId) return;
-    try {
-      const response = await getFileById(fileId);
-      setFile(response.data.file);
-    } catch (error) {
-      console.error("Error fetching file", error);
-    } finally {
-      setIsLoading(false);
-    }
+
+    const response = await fetchFile(fileId, !isAuth);
+    setFile(response);
+    setIsLoading(false);
   };
 
   const getImg = async () => {
     if (!file) return;
 
-    const url = await fetchImage(file);
+    const url = await fetchImage(file, !isAuth);
     setImgUrl(url);
     setIsLoading(false);
   };
@@ -53,7 +51,7 @@ const FileDetails = () => {
   const handleDownloadFile = async () => {
     if (!file) return;
 
-    downloadFileAction(file);
+    downloadFileAction(file, !isAuth);
   };
 
   const handleUpdateFileDetails = async (updatedFile: File) => {
@@ -137,27 +135,31 @@ const FileDetails = () => {
 
   return (
     <div className="max-w-xl mx-auto p-6 border rounded-lg shadow-md bg-white">
-      <div className="flex items-center justify-end gap-4 pt-2 relative">
-        {editMode ? (
-          <KeyboardBackspaceIcon
-            className="cursor-pointer text-gray-600 hover:text-black transition absolute left-0"
-            onClick={() => setEditMode(false)}
-            titleAccess="Back"
-          />
-        ) : (
-          <EditIcon
-            className="cursor-pointer text-blue-500 hover:text-blue-700 transition absolute right-10"
-            onClick={() => setEditMode(true)}
-            titleAccess="Edit"
-          />
-        )}
+      {isAuth ? (
+        <div className="flex items-center justify-end gap-4 pt-2 relative">
+          {editMode ? (
+            <KeyboardBackspaceIcon
+              className="cursor-pointer text-gray-600 hover:text-black transition absolute left-0"
+              onClick={() => setEditMode(false)}
+              titleAccess="Back"
+            />
+          ) : (
+            <EditIcon
+              className="cursor-pointer text-blue-500 hover:text-blue-700 transition absolute right-10"
+              onClick={() => setEditMode(true)}
+              titleAccess="Edit"
+            />
+          )}
 
-        <DeleteIcon
-          className="cursor-pointer text-red-500 hover:text-red-700 transition absolute right-0"
-          onClick={handleDeleteFile}
-          titleAccess="Delete"
-        />
-      </div>
+          <DeleteIcon
+            className="cursor-pointer text-red-500 hover:text-red-700 transition absolute right-0"
+            onClick={handleDeleteFile}
+            titleAccess="Delete"
+          />
+        </div>
+      ) : (
+        ""
+      )}
       {editMode ? (
         <EditFile
           imgUrl={imgUrl}

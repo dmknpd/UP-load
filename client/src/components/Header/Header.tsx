@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useAuthStore } from "../../store/useAuthStore";
 import { useFileStore } from "../../store/useFileStore";
@@ -15,6 +16,8 @@ const Header = () => {
 
   const setIsAuthOpen = useAuthStore((state) => state.setIsAuthOpen);
 
+  const navigate = useNavigate();
+
   const handleLogout = async () => {
     try {
       await logoutUser();
@@ -22,6 +25,7 @@ const Header = () => {
       console.error("Logout error: ", error.message);
     } finally {
       logout();
+      navigate("/", { replace: true });
     }
   };
 

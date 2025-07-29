@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   deleteFileById,
   getFileById,
+  getPublicFileById,
   getPublicFileList,
   getUserFileList,
   serveFileById,
@@ -17,6 +18,7 @@ const router = Router();
 
 //public
 router.get("/public", getPublicFileList);
+router.get("/public/:id", getPublicFileById);
 router.get("/public/download/:id", servePublicFileById);
 
 //private

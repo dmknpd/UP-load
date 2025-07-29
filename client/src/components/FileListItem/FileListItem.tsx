@@ -32,7 +32,7 @@ const FilesListItem: React.FC<Props> = ({ file, isPublic = false }) => {
   }, [file]);
 
   return (
-    <div className="border-2 rounded-lg overflow-hidden h-full shadow-sm p-4 flex flex-col items-center justify-between gap-2">
+    <div className="border-2 rounded-lg hover:border-blue-500 overflow-hidden h-full shadow-sm p-4 flex flex-col items-center justify-between gap-2">
       <div className="flex items-center h-full">
         <img src={imgUrl} alt="File" />
       </div>

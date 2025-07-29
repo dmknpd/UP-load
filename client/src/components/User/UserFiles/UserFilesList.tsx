@@ -44,15 +44,18 @@ const UserFilesList = () => {
   }
 
   return (
-    <ul className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
-      {files.map((file) => (
-        <li key={file._id}>
-          <Link to={`/${file._id}`}>
-            <FilesListItem file={file} />
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <>
+      <h1 className="text-lg sm:text-xl font-semibold mb-2 ">My Files</h1>
+      <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+        {files.map((file) => (
+          <li key={file._id}>
+            <Link to={`/${file._id}`}>
+              <FilesListItem file={file} />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 };
 
