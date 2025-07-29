@@ -5,7 +5,8 @@ import {
   getFileDetailsById,
   getPublicFilesDetails,
   getUserFilesDetails,
-  serveFileByName,
+  serveFileById,
+  servePublicFileById,
   updateFileDetails,
   upload,
   uploadFile,
@@ -14,11 +15,15 @@ import { authenticateTokenMiddleware } from "../middleware/auth.middleware";
 
 const router = Router();
 
-router.get("/", getPublicFilesDetails);
+//public
+router.get("/public", getPublicFilesDetails);
+router.get("/public/download/:id", servePublicFileById);
 
-router.get("/private", authenticateTokenMiddleware, getUserFilesDetails);
+//private
+router.get("/user", authenticateTokenMiddleware, getUserFilesDetails);
 router.get("/:id", authenticateTokenMiddleware, getFileDetailsById);
-router.get("/download/:id", serveFileByName);
+router.get("/download/:id", authenticateTokenMiddleware, serveFileById);
+
 router.patch("/update/:id", authenticateTokenMiddleware, updateFileDetails);
 router.delete("/delete/:id", authenticateTokenMiddleware, deleteFileById);
 

@@ -8,6 +8,7 @@ import {
   getFileDetails,
   updateFileDetails,
 } from "../../api/apiFiles";
+import { useAuthStore } from "../../store/useAuthStore";
 import { useFileStore } from "../../store/useFileStore";
 
 import EditIcon from "@mui/icons-material/Edit";
@@ -20,10 +21,13 @@ const FileDetails = () => {
 
   const [file, setFile] = useState<File | null>(null);
   const [imgUrl, setImgUrl] = useState<string>(fileImg);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [editMode, setEditMode] = useState<boolean>(false);
+
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const setIsLoading = useAuthStore((state) => state.setIsLoading);
+
   const [fileSuccess, setFileSuccess] = useState<string>("");
   const [fileError, setFileError] = useState<string>("");
-  const [editMode, setEditMode] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -35,7 +39,7 @@ const FileDetails = () => {
     } catch (error) {
       console.error("Error fetching file", error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -44,7 +48,7 @@ const FileDetails = () => {
 
     const url = await fetchImage(file);
     setImgUrl(url);
-    setLoading(false);
+    setIsLoading(false);
   };
 
   const handleDownloadFile = async () => {
@@ -108,7 +112,7 @@ const FileDetails = () => {
   useEffect(() => {
     if (file) {
       getImg();
-      setLoading(false);
+      setIsLoading(false);
     }
 
     return () => {
@@ -116,7 +120,7 @@ const FileDetails = () => {
     };
   }, [file]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="spinner"></div>

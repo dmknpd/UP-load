@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuthStore } from "../../store/useAuthStore";
-import AuthModal from "../AuthModal/AuthModal";
 import { logoutUser } from "../../api/apiAuth";
 
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -13,7 +12,7 @@ const Header = () => {
   const email = useAuthStore((state) => state.email);
   const logout = useAuthStore((state) => state.logout);
   const isLoading = useAuthStore((state) => state.isLoading);
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const setIsAuthOpen = useAuthStore((state) => state.setIsAuthOpen);
 
   const handleLogout = async () => {
     try {
@@ -62,8 +61,6 @@ const Header = () => {
           )}
         </ul>
       </div>
-
-      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </header>
   );
 };

@@ -1,22 +1,25 @@
 import { create } from "zustand";
-import { downloadFile } from "../api/apiFiles";
+import { downloadFile, downloadPublicFile } from "../api/apiFiles";
 
 import { File } from "../types/files";
 import fileImg from "../assets/img/file.svg";
 
 interface FileStore {
-  fetchImage: (file: File) => Promise<string>;
-  downloadFileAction: (file: File) => Promise<void>;
+  fetchImage: (file: File, isPublic?: boolean) => Promise<string>;
+  downloadFileAction: (file: File, isPublic?: boolean) => Promise<void>;
 }
 
 export const useFileStore = create<FileStore>(() => ({
-  fetchImage: async (file: File) => {
+  fetchImage: async (file: File, isPublic = false) => {
     if (!file.mimetype.startsWith("image/")) {
       return fileImg;
     }
 
     try {
-      const response = await downloadFile(file._id);
+      const response = isPublic
+        ? await downloadPublicFile(file._id)
+        : await downloadFile(file._id);
+
       return URL.createObjectURL(response.data);
     } catch (error) {
       console.error("Error fetching image", error);
@@ -24,9 +27,11 @@ export const useFileStore = create<FileStore>(() => ({
     }
   },
 
-  downloadFileAction: async (file: File) => {
+  downloadFileAction: async (file: File, isPublic = false) => {
     try {
-      const response = await downloadFile(file._id);
+      const response = isPublic
+        ? await downloadPublicFile(file._id)
+        : await downloadFile(file._id);
 
       const url = URL.createObjectURL(response.data);
       const link = document.createElement("a");
@@ -35,12 +40,11 @@ export const useFileStore = create<FileStore>(() => ({
       link.download = file.originalname;
 
       document.body.appendChild(link);
-
       link.click();
       document.body.removeChild(link);
 
       URL.revokeObjectURL(url);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error downloading file", error);
     }
   },

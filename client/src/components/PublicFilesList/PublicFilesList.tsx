@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { getFilesDetails } from "../../api/apiFiles";
+import { useAuthStore } from "../../store/useAuthStore";
 
 import { File } from "../../types/files";
 
@@ -9,6 +11,8 @@ import FilesListItem from "../FileListItem/FileListItem";
 const PublicFilesList = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
+  const token = useAuthStore((state) => state.accessToken);
+  const setIsAuthOpen = useAuthStore((state) => state.setIsAuthOpen);
 
   const getFiles = async () => {
     try {
@@ -45,11 +49,17 @@ const PublicFilesList = () => {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
+    <ul className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
       {files.map((file) => (
-        <FilesListItem key={file._id} file={file} />
+        <li
+          key={file._id}
+          onClick={() => setIsAuthOpen(true)}
+          className="cursor-pointer"
+        >
+          <FilesListItem file={file} isPublic={true} />
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };
 

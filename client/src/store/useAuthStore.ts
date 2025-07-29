@@ -12,8 +12,10 @@ interface AuthState {
   accessToken: string | null;
   email: string | null;
   isLoading: boolean;
+  isAuthOpen: boolean;
   setToken: (token: string) => void;
   setIsLoading: (loading: boolean) => void;
+  setIsAuthOpen: (auth: boolean) => void;
   logout: () => void;
 }
 
@@ -21,6 +23,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   email: null,
   isLoading: true,
+  isAuthOpen: false,
 
   setToken: (token: string) => {
     try {
@@ -33,6 +36,10 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   setIsLoading: (loading: boolean) => {
     set({ isLoading: loading });
+  },
+
+  setIsAuthOpen: (auth: boolean) => {
+    set({ isAuthOpen: auth });
   },
 
   logout: () => {

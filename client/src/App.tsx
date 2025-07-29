@@ -7,15 +7,18 @@ import { useAuthStore } from "./store/useAuthStore";
 import Header from "./components/Header/Header";
 import Upload from "./components/Upload/Upload";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import FileDetails from "./components/FileDetails/FileDetails";
+import AuthModal from "./components/AuthModal/AuthModal";
 import PublicFilesList from "./components/PublicFilesList/PublicFilesList";
 import UserFilesList from "./components/User/UserFiles/UserFilesList";
-import FileDetails from "./components/FileDetails/FileDetails";
 
 function App() {
   const token = useAuthStore((state) => state.accessToken);
   const setToken = useAuthStore((state) => state.setToken);
   const isLoading = useAuthStore((state) => state.isLoading);
   const setIsLoading = useAuthStore((state) => state.setIsLoading);
+  const isAuthOpen = useAuthStore((state) => state.isAuthOpen);
+  const setIsAuthOpen = useAuthStore((state) => state.setIsAuthOpen);
 
   const handleTokenRefresh = async () => {
     try {
@@ -54,6 +57,7 @@ function App() {
             </Route>
           </Routes>
         )}
+        <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
       </main>
     </BrowserRouter>
   );

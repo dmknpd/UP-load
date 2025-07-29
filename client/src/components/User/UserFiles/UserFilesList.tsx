@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { getUserFilesDetails } from "../../../api/apiFiles";
 
@@ -10,7 +11,7 @@ const UserFilesList = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const getFiles = async () => {
+  const getUserFiles = async () => {
     try {
       const response = await getUserFilesDetails();
       setFiles(response.data.files);
@@ -23,7 +24,7 @@ const UserFilesList = () => {
   };
 
   useEffect(() => {
-    getFiles();
+    getUserFiles();
   }, []);
 
   if (loading) {
@@ -45,11 +46,15 @@ const UserFilesList = () => {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
+    <ul className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
       {files.map((file) => (
-        <FilesListItem key={file._id} file={file} />
+        <li key={file._id}>
+          <Link to={`/${file._id}`}>
+            <FilesListItem file={file} />
+          </Link>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };
 
