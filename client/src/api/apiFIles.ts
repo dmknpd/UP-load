@@ -19,3 +19,6 @@ export const downloadFile = (id: string) =>
   });
 
 export const getFileDetails = (fileId: string) => Api.get(`files/${fileId}`);
+
+export const deleteFileById = (fileId: string) =>
+  Api.delete(`files/delete/${fileId}`);

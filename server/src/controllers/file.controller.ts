@@ -212,3 +212,37 @@ export const updateFileDetails = async (
     return;
   }
 };
+
+export const deleteFileById = async (req: RequestWithUserId, res: Response) => {
+  const userId = req.userId;
+  const { id } = req.params;
+
+  try {
+    const file = await File.findById(id);
+
+    if (!file) {
+      res.status(404).json({ message: "File not found" });
+      return;
+    }
+
+    if (file.user.toString() !== userId) {
+      res.status(403).json({ message: "Access denied" });
+      return;
+    }
+
+    const filePath = path.resolve("uploads", `user_${userId}`, file.filename);
+
+    if (fs.existsSync(filePath)) {
+      await fs.promises.unlink(filePath);
+    }
+
+    await File.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "File deleted successfully" });
+    return;
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    res.status(500).json({ errors: { file: ["Error deleting file"] } });
+    return;
+  }
+};

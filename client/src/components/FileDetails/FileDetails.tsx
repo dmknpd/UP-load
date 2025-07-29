@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { File } from "../../types/files";
 import fileImg from "../../assets/img/file.svg";
 import {
-  downloadFile,
+  deleteFileById,
   getFileDetails,
   updateFileDetails,
 } from "../../api/apiFiles";
@@ -24,6 +24,8 @@ const FileDetails = () => {
   const [fileSuccess, setFileSuccess] = useState<string>("");
   const [fileError, setFileError] = useState<string>("");
   const [editMode, setEditMode] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const getFile = async () => {
     if (!fileId) return;
@@ -71,6 +73,23 @@ const FileDetails = () => {
       setFile(updatedFile);
       setEditMode(false);
       setFileSuccess("File Updated Successfully");
+    }
+  };
+
+  const handleDeleteFile = async () => {
+    if (!fileId) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this file?"
+    );
+    if (!confirmed) return;
+
+    try {
+      await deleteFileById(fileId);
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error("Error deleting file", error);
+      setFileError("Failed to delete file");
     }
   };
 
@@ -132,7 +151,7 @@ const FileDetails = () => {
 
         <DeleteIcon
           className="cursor-pointer text-red-500 hover:text-red-700 transition absolute right-0"
-          // onClick={handleDeleteFile}
+          onClick={handleDeleteFile}
           titleAccess="Delete"
         />
       </div>
