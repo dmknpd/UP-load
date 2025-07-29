@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { refreshToken } from "./api/apiAuth";
 
 import { useAuthStore } from "./store/useAuthStore";
+import { useFileStore } from "./store/useFileStore";
+
 import Header from "./components/Header/Header";
 import Upload from "./components/Upload/Upload";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
@@ -15,8 +17,7 @@ import UserFilesList from "./components/User/UserFiles/UserFilesList";
 function App() {
   const token = useAuthStore((state) => state.accessToken);
   const setToken = useAuthStore((state) => state.setToken);
-  const isLoading = useAuthStore((state) => state.isLoading);
-  const setIsLoading = useAuthStore((state) => state.setIsLoading);
+  const { isLoading, setIsLoading } = useFileStore();
   const isAuthOpen = useAuthStore((state) => state.isAuthOpen);
   const setIsAuthOpen = useAuthStore((state) => state.setIsAuthOpen);
 

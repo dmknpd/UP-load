@@ -8,7 +8,6 @@ import {
   getFileDetails,
   updateFileDetails,
 } from "../../api/apiFiles";
-import { useAuthStore } from "../../store/useAuthStore";
 import { useFileStore } from "../../store/useFileStore";
 
 import EditIcon from "@mui/icons-material/Edit";
@@ -23,8 +22,7 @@ const FileDetails = () => {
   const [imgUrl, setImgUrl] = useState<string>(fileImg);
   const [editMode, setEditMode] = useState<boolean>(false);
 
-  const isLoading = useAuthStore((state) => state.isLoading);
-  const setIsLoading = useAuthStore((state) => state.setIsLoading);
+  const { isLoading, setIsLoading } = useFileStore();
 
   const [fileSuccess, setFileSuccess] = useState<string>("");
   const [fileError, setFileError] = useState<string>("");

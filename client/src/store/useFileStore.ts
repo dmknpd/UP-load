@@ -5,11 +5,19 @@ import { File } from "../types/files";
 import fileImg from "../assets/img/file.svg";
 
 interface FileStore {
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
   fetchImage: (file: File, isPublic?: boolean) => Promise<string>;
   downloadFileAction: (file: File, isPublic?: boolean) => Promise<void>;
 }
 
-export const useFileStore = create<FileStore>(() => ({
+export const useFileStore = create<FileStore>((set) => ({
+  isLoading: true,
+
+  setIsLoading: (loading: boolean) => {
+    set({ isLoading: loading });
+  },
+
   fetchImage: async (file: File, isPublic = false) => {
     if (!file.mimetype.startsWith("image/")) {
       return fileImg;

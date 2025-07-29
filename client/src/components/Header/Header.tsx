@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuthStore } from "../../store/useAuthStore";
+import { useFileStore } from "../../store/useFileStore";
 import { logoutUser } from "../../api/apiAuth";
 
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -11,7 +11,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 const Header = () => {
   const email = useAuthStore((state) => state.email);
   const logout = useAuthStore((state) => state.logout);
-  const isLoading = useAuthStore((state) => state.isLoading);
+  const { isLoading } = useFileStore();
   const setIsAuthOpen = useAuthStore((state) => state.setIsAuthOpen);
 
   const handleLogout = async () => {

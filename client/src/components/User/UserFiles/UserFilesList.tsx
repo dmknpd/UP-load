@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { getUserFilesDetails } from "../../../api/apiFiles";
+import { useFileStore } from "../../../store/useFileStore";
 
 import { File } from "../../../types/files";
 
@@ -9,7 +10,7 @@ import FilesListItem from "../../FileListItem/FileListItem";
 
 const UserFilesList = () => {
   const [files, setFiles] = useState<File[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { isLoading, setIsLoading } = useFileStore();
 
   const getUserFiles = async () => {
     try {
@@ -19,7 +20,7 @@ const UserFilesList = () => {
     } catch (error: any) {
       console.error("Error fetching files", error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -27,7 +28,7 @@ const UserFilesList = () => {
     getUserFiles();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="spinner"></div>
