@@ -84,39 +84,22 @@ export const uploadFile = async (req: RequestWithUserId, res: Response) => {
   }
 };
 
-export const serveFileById = async (req: RequestWithUserId, res: Response) => {
-  const { id } = req.params;
-  const userId = req.userId;
+//PUBLIC
 
+export const getPublicFileList = async (
+  req: RequestWithUserId,
+  res: Response
+) => {
   try {
-    const file = await File.findById(id);
+    const files = await File.find({ isPublic: true })
+      .sort({ createdAt: -1 })
+      .select("-user -__v");
 
-    if (!file) {
-      res.status(404).json({ message: "File not found" });
-      return;
-    }
-
-    if (file.user.toString() !== userId) {
-      res.status(403).json({ message: "Access denied" });
-      return;
-    }
-
-    const filePath = path.resolve(
-      "uploads",
-      `user_${file.user}`,
-      file.filename
-    );
-
-    if (!fs.existsSync(filePath)) {
-      res.status(404).json({ message: "File does not exist" });
-      return;
-    }
-
-    res.sendFile(filePath);
+    res.status(200).json({ files });
     return;
   } catch (error) {
-    console.error("Error serving file:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error(error);
+    res.status(500).json({ message: "Error receiving  file" });
     return;
   }
 };
@@ -160,10 +143,29 @@ export const servePublicFileById = async (
   }
 };
 
-export const getFileDetailsById = async (
+//PRIVATE
+
+export const getUserFileList = async (
   req: RequestWithUserId,
   res: Response
 ) => {
+  const userId = req.userId;
+
+  try {
+    const files = await File.find({ user: userId })
+      .sort({ createdAt: -1 })
+      .select("-user -__v");
+
+    res.status(200).json({ files });
+    return;
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error receiving  file" });
+    return;
+  }
+};
+
+export const getFileById = async (req: RequestWithUserId, res: Response) => {
   const userId = req.userId;
   const fileId = req.params.id;
 
@@ -189,48 +191,44 @@ export const getFileDetailsById = async (
   }
 };
 
-export const getUserFilesDetails = async (
-  req: RequestWithUserId,
-  res: Response
-) => {
+export const serveFileById = async (req: RequestWithUserId, res: Response) => {
+  const { id } = req.params;
   const userId = req.userId;
 
   try {
-    const files = await File.find({ user: userId })
-      .sort({ createdAt: -1 })
-      .select("-user -__v");
+    const file = await File.findById(id);
 
-    res.status(200).json({ files });
+    if (!file) {
+      res.status(404).json({ message: "File not found" });
+      return;
+    }
+
+    if (file.user.toString() !== userId) {
+      res.status(403).json({ message: "Access denied" });
+      return;
+    }
+
+    const filePath = path.resolve(
+      "uploads",
+      `user_${file.user}`,
+      file.filename
+    );
+
+    if (!fs.existsSync(filePath)) {
+      res.status(404).json({ message: "File does not exist" });
+      return;
+    }
+
+    res.sendFile(filePath);
     return;
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error receiving  file" });
+    console.error("Error serving file:", error);
+    res.status(500).json({ message: "Server error" });
     return;
   }
 };
 
-export const getPublicFilesDetails = async (
-  req: RequestWithUserId,
-  res: Response
-) => {
-  try {
-    const files = await File.find({ isPublic: true })
-      .sort({ createdAt: -1 })
-      .select("-user -__v");
-
-    res.status(200).json({ files });
-    return;
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error receiving  file" });
-    return;
-  }
-};
-
-export const updateFileDetails = async (
-  req: RequestWithUserId,
-  res: Response
-) => {
+export const updateFileById = async (req: RequestWithUserId, res: Response) => {
   const userId = req.userId;
   const { id } = req.params;
   const { isPublic, originalname } = req.body;

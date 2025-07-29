@@ -5,8 +5,8 @@ import { File } from "../../types/files";
 import fileImg from "../../assets/img/file.svg";
 import {
   deleteFileById,
-  getFileDetails,
-  updateFileDetails,
+  getFileById,
+  updateFileById,
 } from "../../api/apiFiles";
 import { useFileStore } from "../../store/useFileStore";
 
@@ -32,7 +32,7 @@ const FileDetails = () => {
   const getFile = async () => {
     if (!fileId) return;
     try {
-      const response = await getFileDetails(fileId);
+      const response = await getFileById(fileId);
       setFile(response.data.file);
     } catch (error) {
       console.error("Error fetching file", error);
@@ -60,7 +60,7 @@ const FileDetails = () => {
     setFileSuccess("");
 
     try {
-      await updateFileDetails(file._id, {
+      await updateFileById(file._id, {
         originalname: updatedFile.originalname,
         isPublic: updatedFile.isPublic,
       });

@@ -2,12 +2,12 @@ import { Router } from "express";
 
 import {
   deleteFileById,
-  getFileDetailsById,
-  getPublicFilesDetails,
-  getUserFilesDetails,
+  getFileById,
+  getPublicFileList,
+  getUserFileList,
   serveFileById,
   servePublicFileById,
-  updateFileDetails,
+  updateFileById,
   upload,
   uploadFile,
 } from "../controllers/file.controller";
@@ -16,15 +16,15 @@ import { authenticateTokenMiddleware } from "../middleware/auth.middleware";
 const router = Router();
 
 //public
-router.get("/public", getPublicFilesDetails);
+router.get("/public", getPublicFileList);
 router.get("/public/download/:id", servePublicFileById);
 
 //private
-router.get("/user", authenticateTokenMiddleware, getUserFilesDetails);
-router.get("/:id", authenticateTokenMiddleware, getFileDetailsById);
+router.get("/user", authenticateTokenMiddleware, getUserFileList);
+router.get("/:id", authenticateTokenMiddleware, getFileById);
 router.get("/download/:id", authenticateTokenMiddleware, serveFileById);
 
-router.patch("/update/:id", authenticateTokenMiddleware, updateFileDetails);
+router.patch("/update/:id", authenticateTokenMiddleware, updateFileById);
 router.delete("/delete/:id", authenticateTokenMiddleware, deleteFileById);
 
 router.post(

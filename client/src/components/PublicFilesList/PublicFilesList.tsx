@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { getFilesDetails } from "../../api/apiFiles";
+import { getFileList } from "../../api/apiFiles";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useFileStore } from "../../store/useFileStore";
 
@@ -17,7 +17,7 @@ const PublicFilesList = () => {
 
   const getFiles = async () => {
     try {
-      const response = await getFilesDetails();
+      const response = await getFileList();
       setFiles(response.data.files);
       console.log("Files uploaded successfully");
     } catch (error: any) {
