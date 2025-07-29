@@ -9,7 +9,9 @@ export const uploadFile = (data: FormData) =>
     },
   });
 
-export const getUserFiles = () => Api.get("/files/");
+export const getFilesDetails = () => Api.get("/files/");
+
+export const getUserFilesDetails = () => Api.get("/files/private");
 export const updateFileDetails = (id: string, updatedFile: UpdateFileData) =>
   Api.patch(`/files/update/${id}`, updatedFile);
 

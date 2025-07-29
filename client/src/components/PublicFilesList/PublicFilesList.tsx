@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 
-import { getUserFilesDetails } from "../../../api/apiFiles";
+import { getFilesDetails } from "../../api/apiFiles";
 
-import { File } from "../../../types/files";
+import { File } from "../../types/files";
 
-import FilesListItem from "../../FileListItem/FileListItem";
+import FilesListItem from "../FileListItem/FileListItem";
 
-const UserFilesList = () => {
+const PublicFilesList = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
 
   const getFiles = async () => {
     try {
-      const response = await getUserFilesDetails();
+      const response = await getFilesDetails();
       setFiles(response.data.files);
       console.log("Files uploaded successfully");
     } catch (error: any) {
@@ -38,7 +38,7 @@ const UserFilesList = () => {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center text-2xl">
-          You don’t have any files yet.
+          There aren’t any public files yet.
         </div>
       </div>
     );
@@ -53,4 +53,4 @@ const UserFilesList = () => {
   );
 };
 
-export default UserFilesList;
+export default PublicFilesList;

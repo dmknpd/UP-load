@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { downloadFile } from "../api/apiFiles";
-import fileImg from "../assets/img/file.svg";
+
 import { File } from "../types/files";
+import fileImg from "../assets/img/file.svg";
 
 interface FileStore {
   fetchImage: (file: File) => Promise<string>;

@@ -173,6 +173,24 @@ export const getUserFilesDetails = async (
   }
 };
 
+export const getPublicFilesDetails = async (
+  req: RequestWithUserId,
+  res: Response
+) => {
+  try {
+    const files = await File.find({ isPublic: true })
+      .sort({ createdAt: -1 })
+      .select("-user -__v");
+
+    res.status(200).json({ files });
+    return;
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error receiving  file" });
+    return;
+  }
+};
+
 export const updateFileDetails = async (
   req: RequestWithUserId,
   res: Response

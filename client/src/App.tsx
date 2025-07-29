@@ -7,6 +7,7 @@ import { useAuthStore } from "./store/useAuthStore";
 import Header from "./components/Header/Header";
 import Upload from "./components/Upload/Upload";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import PublicFilesList from "./components/PublicFilesList/PublicFilesList";
 import UserFilesList from "./components/User/UserFiles/UserFilesList";
 import FileDetails from "./components/FileDetails/FileDetails";
 
@@ -44,7 +45,7 @@ function App() {
           </div>
         ) : (
           <Routes>
-            <Route path="/" element={<div>Main</div>} />
+            <Route path="/" element={<PublicFilesList />} />
 
             <Route element={<ProtectedRoute />}>
               <Route path="/upload" element={<Upload />} />

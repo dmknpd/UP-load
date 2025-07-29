@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   deleteFileById,
   getFileDetailsById,
+  getPublicFilesDetails,
   getUserFilesDetails,
   serveFileByName,
   updateFileDetails,
@@ -13,9 +14,11 @@ import { authenticateTokenMiddleware } from "../middleware/auth.middleware";
 
 const router = Router();
 
-router.get("/", authenticateTokenMiddleware, getUserFilesDetails);
+router.get("/", getPublicFilesDetails);
+
+router.get("/private", authenticateTokenMiddleware, getUserFilesDetails);
 router.get("/:id", authenticateTokenMiddleware, getFileDetailsById);
-router.get("/download/:id", authenticateTokenMiddleware, serveFileByName);
+router.get("/download/:id", serveFileByName);
 router.patch("/update/:id", authenticateTokenMiddleware, updateFileDetails);
 router.delete("/delete/:id", authenticateTokenMiddleware, deleteFileById);
 

@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { useFileStore } from "../../../store/useFileStore";
+import { useFileStore } from "../../store/useFileStore";
 
-import { File } from "../../../types/files";
+import { File } from "../../types/files";
+import fileImg from "../../assets/img/file.svg";
 
 interface Props {
   file: File;
 }
 
-const UserFilesListItem: React.FC<Props> = ({ file }) => {
+const FilesListItem: React.FC<Props> = ({ file }) => {
   const { fetchImage } = useFileStore();
-  const [imgUrl, setImgUrl] = useState<string>("");
+  const [imgUrl, setImgUrl] = useState<string>(fileImg);
 
   const getImg = async () => {
     if (!file) return;
@@ -49,4 +50,4 @@ const UserFilesListItem: React.FC<Props> = ({ file }) => {
   );
 };
 
-export default UserFilesListItem;
+export default FilesListItem;
