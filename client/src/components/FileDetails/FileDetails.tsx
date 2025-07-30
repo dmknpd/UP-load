@@ -13,7 +13,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 const FileDetails = () => {
   const { fileId } = useParams<{ fileId: string }>();
-  const isAuth = useAuthStore((state) => !!state.accessToken);
+  const userId = useAuthStore((state) => state.userId);
 
   const fetchImage = useFileStore((state) => state.fetchImage);
   const downloadFileAction = useFileStore((state) => state.downloadFileAction);
@@ -30,28 +30,28 @@ const FileDetails = () => {
   const [fileSuccess, setFileSuccess] = useState<string>("");
   const [fileError, setFileError] = useState<string>("");
 
+  const isOwner = file && userId === file.user;
+
   const navigate = useNavigate();
 
   const getFile = async () => {
     if (!fileId) return;
 
-    const response = await fetchFile(fileId, !isAuth);
+    const response = await fetchFile(fileId, !isOwner);
     setFile(response);
-    setIsLoading(false);
   };
 
   const getImg = async () => {
     if (!file) return;
 
-    const url = await fetchImage(file, !isAuth);
+    const url = await fetchImage(file, !isOwner);
     setImgUrl(url);
-    setIsLoading(false);
   };
 
   const handleDownloadFile = async () => {
     if (!file) return;
 
-    downloadFileAction(file, !isAuth);
+    downloadFileAction(file, !isOwner);
   };
 
   const handleUpdateFileDetails = async (updatedFile: File) => {
@@ -96,7 +96,9 @@ const FileDetails = () => {
 
   useEffect(() => {
     if (fileId) {
+      setIsLoading(true);
       getFile();
+      setIsLoading(false);
     }
 
     return () => {
@@ -109,7 +111,6 @@ const FileDetails = () => {
   useEffect(() => {
     if (file) {
       getImg();
-      setIsLoading(false);
     }
 
     return () => {
@@ -135,7 +136,7 @@ const FileDetails = () => {
 
   return (
     <div className="max-w-xl mx-auto p-6 border rounded-lg shadow-md bg-white">
-      {isAuth ? (
+      {isOwner ? (
         <div className="flex items-center justify-end gap-4 pt-2 relative">
           {editMode ? (
             <KeyboardBackspaceIcon

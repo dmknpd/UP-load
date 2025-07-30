@@ -8,6 +8,7 @@ export interface IFile extends Document {
   mimetype: string;
   size: number;
   isPublic: boolean;
+  downloads: number;
   createdAt: Date;
 }
 
@@ -19,6 +20,7 @@ const FileSchema: Schema<IFile> = new Schema({
   mimetype: { type: String, required: true },
   size: { type: Number, required: true },
   isPublic: { type: Boolean, default: false },
+  downloads: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
 });
 

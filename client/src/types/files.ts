@@ -1,5 +1,6 @@
 export interface File {
   _id: string;
+  user: string;
   filename: string;
   originalname: string;
   path: string;

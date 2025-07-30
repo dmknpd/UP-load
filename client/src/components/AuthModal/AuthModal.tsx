@@ -36,11 +36,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div
-      onClick={handleOnClose}
+      onMouseDown={handleOnClose}
       className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30"
     >
       <div
-        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
         className="bg-white p-14 rounded-md shadow-lg relative w-full max-w-md"
       >
         {mode === "login" ? (

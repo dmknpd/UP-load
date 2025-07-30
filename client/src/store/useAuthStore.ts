@@ -10,6 +10,7 @@ interface DecodedToken {
 
 interface AuthState {
   accessToken: string | null;
+  userId: string | null;
   email: string | null;
   isAuthOpen: boolean;
   setToken: (token: string) => void;
@@ -20,6 +21,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
+  userId: null,
   email: null,
 
   isAuthOpen: false,
@@ -27,7 +29,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   setToken: (token: string) => {
     try {
       const decoded: DecodedToken = jwtDecode(token);
-      set({ accessToken: token, email: decoded.email });
+      set({ accessToken: token, userId: decoded.userId, email: decoded.email });
     } catch (error: any) {
       console.error("Error decoding token: ", error.message);
     }
