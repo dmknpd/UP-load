@@ -7,6 +7,7 @@ export interface File {
   mimetype: string;
   size: number;
   isPublic: boolean;
+  downloads: number;
   createdAt: Date;
 }
 

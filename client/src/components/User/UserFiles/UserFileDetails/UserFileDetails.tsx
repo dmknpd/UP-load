@@ -1,19 +1,17 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { File } from "../../types/files";
-import fileImg from "../../assets/img/file.svg";
-import { deleteFileById, updateFileById } from "../../api/apiFiles";
-import { useFileStore } from "../../store/useFileStore";
-import { useAuthStore } from "../../store/useAuthStore";
+import { File } from "../../../../types/files";
+import fileImg from "../../../../assets/img/file.svg";
+import { deleteFileById, updateFileById } from "../../../../api/apiFiles";
+import { useFileStore } from "../../../../store/useFileStore";
 
 import EditIcon from "@mui/icons-material/Edit";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const FileDetails = () => {
+const UserFileDetails = () => {
   const { fileId } = useParams<{ fileId: string }>();
-  const userId = useAuthStore((state) => state.userId);
 
   const fetchImage = useFileStore((state) => state.fetchImage);
   const downloadFileAction = useFileStore((state) => state.downloadFileAction);
@@ -30,28 +28,26 @@ const FileDetails = () => {
   const [fileSuccess, setFileSuccess] = useState<string>("");
   const [fileError, setFileError] = useState<string>("");
 
-  const isOwner = file && userId === file.user;
-
   const navigate = useNavigate();
 
   const getFile = async () => {
     if (!fileId) return;
 
-    const response = await fetchFile(fileId, !isOwner);
+    const response = await fetchFile(fileId);
     setFile(response);
   };
 
   const getImg = async () => {
     if (!file) return;
 
-    const url = await fetchImage(file, !isOwner);
+    const url = await fetchImage(file);
     setImgUrl(url);
   };
 
   const handleDownloadFile = async () => {
     if (!file) return;
 
-    downloadFileAction(file, !isOwner);
+    downloadFileAction(file);
   };
 
   const handleUpdateFileDetails = async (updatedFile: File) => {
@@ -136,31 +132,28 @@ const FileDetails = () => {
 
   return (
     <div className="max-w-xl mx-auto p-6 border rounded-lg shadow-md bg-white">
-      {isOwner ? (
-        <div className="flex items-center justify-end gap-4 pt-2 relative">
-          {editMode ? (
-            <KeyboardBackspaceIcon
-              className="cursor-pointer text-gray-600 hover:text-black transition absolute left-0"
-              onClick={() => setEditMode(false)}
-              titleAccess="Back"
-            />
-          ) : (
-            <EditIcon
-              className="cursor-pointer text-blue-500 hover:text-blue-700 transition absolute right-10"
-              onClick={() => setEditMode(true)}
-              titleAccess="Edit"
-            />
-          )}
-
-          <DeleteIcon
-            className="cursor-pointer text-red-500 hover:text-red-700 transition absolute right-0"
-            onClick={handleDeleteFile}
-            titleAccess="Delete"
+      <div className="flex items-center justify-end gap-4 pt-2 relative">
+        {editMode ? (
+          <KeyboardBackspaceIcon
+            className="cursor-pointer text-gray-600 hover:text-black transition absolute left-0"
+            onClick={() => setEditMode(false)}
+            titleAccess="Back"
           />
-        </div>
-      ) : (
-        ""
-      )}
+        ) : (
+          <EditIcon
+            className="cursor-pointer text-blue-500 hover:text-blue-700 transition absolute right-10"
+            onClick={() => setEditMode(true)}
+            titleAccess="Edit"
+          />
+        )}
+
+        <DeleteIcon
+          className="cursor-pointer text-red-500 hover:text-red-700 transition absolute right-0"
+          onClick={handleDeleteFile}
+          titleAccess="Delete"
+        />
+      </div>
+
       {editMode ? (
         <EditFile
           imgUrl={imgUrl}
@@ -295,6 +288,10 @@ const FileInfo: React.FC<FileInfoProps> = ({
           <span className="font-semibold">Private: </span>
           {!file.isPublic ? "Yes" : "No"}
         </p>
+        <p>
+          <span className="font-semibold">Downloads: </span>
+          {file.downloads}
+        </p>
       </div>
 
       {fileSuccess && (
@@ -313,4 +310,4 @@ const FileInfo: React.FC<FileInfoProps> = ({
   );
 };
 
-export default FileDetails;
+export default UserFileDetails;

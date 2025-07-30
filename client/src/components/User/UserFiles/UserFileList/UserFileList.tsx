@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { useFileStore } from "../../../store/useFileStore";
+import { useFileStore } from "../../../../store/useFileStore";
 
-import { File } from "../../../types/files";
+import { File } from "../../../../types/files";
 
-import FilesListItem from "../../FileListItem/FileListItem";
+import FilesListItem from "../../../FileListItem/FileListItem";
 
-const UserFilesList = () => {
+const UserFileList = () => {
   const [files, setFiles] = useState<File[]>([]);
   const fetchFileList = useFileStore((state) => state.fetchFileList);
 
@@ -49,7 +49,7 @@ const UserFilesList = () => {
       <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
         {files.map((file) => (
           <li key={file._id}>
-            <Link to={`/${file._id}`}>
+            <Link to={`/my_files/${file._id}`}>
               <FilesListItem file={file} />
             </Link>
           </li>
@@ -59,4 +59,4 @@ const UserFilesList = () => {
   );
 };
 
-export default UserFilesList;
+export default UserFileList;

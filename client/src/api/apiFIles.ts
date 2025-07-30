@@ -6,6 +6,10 @@ import { UpdateFileData } from "../types/files";
 export const getPublicFileList = () => Api.get("/files/public");
 export const getPublicFileById = (fileId: string) =>
   Api.get(`/files/public/${fileId}`);
+export const getPublicPreview = (fileId: string) =>
+  Api.get(`/files/public/preview/${fileId}`, {
+    responseType: "blob",
+  });
 export const downloadPublicFile = (fileId: string) =>
   Api.get(`/files/public/download/${fileId}`, {
     responseType: "blob",
@@ -25,6 +29,11 @@ export const getFileById = (fileId: string) => Api.get(`files/${fileId}`);
 
 export const updateFileById = (fileId: string, updatedFile: UpdateFileData) =>
   Api.patch(`/files/update/${fileId}`, updatedFile);
+
+export const getPreview = (fileId: string) =>
+  Api.get(`/files/preview/${fileId}`, {
+    responseType: "blob",
+  });
 
 export const downloadFile = (fileId: string) =>
   Api.get(`/files/download/${fileId}`, {

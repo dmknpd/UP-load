@@ -127,10 +127,11 @@ export const getPublicFileById = async (req: Request, res: Response) => {
 };
 
 export const servePublicFileById = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const fileId = req.params.id;
+  const url = req.originalUrl;
 
   try {
-    const file = await File.findById(id);
+    const file = await File.findById(fileId);
 
     if (!file) {
       res.status(404).json({ message: "File not found" });
@@ -151,6 +152,11 @@ export const servePublicFileById = async (req: Request, res: Response) => {
     if (!fs.existsSync(filePath)) {
       res.status(404).json({ message: "File does not exist" });
       return;
+    }
+
+    if (url.includes("download")) {
+      file.downloads = (file.downloads || 0) + 1;
+      await file.save();
     }
 
     res.sendFile(filePath);
@@ -211,11 +217,12 @@ export const getFileById = async (req: RequestWithUserId, res: Response) => {
 };
 
 export const serveFileById = async (req: RequestWithUserId, res: Response) => {
-  const { id } = req.params;
+  const fileId = req.params.id;
   const userId = req.userId;
+  const url = req.originalUrl;
 
   try {
-    const file = await File.findById(id);
+    const file = await File.findById(fileId);
 
     if (!file) {
       res.status(404).json({ message: "File not found" });
@@ -238,6 +245,11 @@ export const serveFileById = async (req: RequestWithUserId, res: Response) => {
       return;
     }
 
+    if (url.includes("download")) {
+      file.downloads = (file.downloads || 0) + 1;
+      await file.save();
+    }
+
     res.sendFile(filePath);
     return;
   } catch (error) {
@@ -249,11 +261,12 @@ export const serveFileById = async (req: RequestWithUserId, res: Response) => {
 
 export const updateFileById = async (req: RequestWithUserId, res: Response) => {
   const userId = req.userId;
-  const { id } = req.params;
+  const fileId = req.params.id;
+
   const { isPublic, originalname } = req.body;
 
   try {
-    const file = await File.findById(id);
+    const file = await File.findById(fileId);
 
     if (!file) {
       res.status(404).json({ message: "File not found" });
@@ -286,10 +299,10 @@ export const updateFileById = async (req: RequestWithUserId, res: Response) => {
 
 export const deleteFileById = async (req: RequestWithUserId, res: Response) => {
   const userId = req.userId;
-  const { id } = req.params;
+  const fileId = req.params.id;
 
   try {
-    const file = await File.findById(id);
+    const file = await File.findById(fileId);
 
     if (!file) {
       res.status(404).json({ message: "File not found" });
@@ -307,7 +320,7 @@ export const deleteFileById = async (req: RequestWithUserId, res: Response) => {
       await fs.promises.unlink(filePath);
     }
 
-    await File.findByIdAndDelete(id);
+    await File.findByIdAndDelete(fileId);
 
     res.status(200).json({ message: "File deleted successfully" });
     return;

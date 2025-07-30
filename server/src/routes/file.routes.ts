@@ -19,11 +19,13 @@ const router = Router();
 //public
 router.get("/public", getPublicFileList);
 router.get("/public/:id", getPublicFileById);
+router.get("/public/preview/:id", servePublicFileById);
 router.get("/public/download/:id", servePublicFileById);
 
 //private
 router.get("/user", authenticateTokenMiddleware, getUserFileList);
 router.get("/:id", authenticateTokenMiddleware, getFileById);
+router.get("/preview/:id", authenticateTokenMiddleware, serveFileById);
 router.get("/download/:id", authenticateTokenMiddleware, serveFileById);
 
 router.patch("/update/:id", authenticateTokenMiddleware, updateFileById);

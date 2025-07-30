@@ -3,8 +3,10 @@ import {
   downloadFile,
   downloadPublicFile,
   getFileById,
+  getPreview,
   getPublicFileById,
   getPublicFileList,
+  getPublicPreview,
   getUserFileList,
 } from "../api/apiFiles";
 
@@ -34,8 +36,8 @@ export const useFileStore = create<FileStore>((set) => ({
 
     try {
       const response = isPublic
-        ? await downloadPublicFile(file._id)
-        : await downloadFile(file._id);
+        ? await getPublicPreview(file._id)
+        : await getPreview(file._id);
 
       return URL.createObjectURL(response.data);
     } catch (error) {

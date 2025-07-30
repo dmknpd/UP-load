@@ -9,10 +9,12 @@ import { useFileStore } from "./store/useFileStore";
 import Header from "./components/Header/Header";
 import Upload from "./components/Upload/Upload";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-import FileDetails from "./components/FileDetails/FileDetails";
+import FileDetails from "./components/User/UserFiles/UserFileDetails/UserFileDetails";
 import AuthModal from "./components/AuthModal/AuthModal";
 import PublicFilesList from "./components/PublicFilesList/PublicFilesList";
-import UserFilesList from "./components/User/UserFiles/UserFilesList";
+import UserFileList from "./components/User/UserFiles/UserFileList/UserFileList";
+import UserFileDetails from "./components/User/UserFiles/UserFileDetails/UserFileDetails";
+import PublicFileDetails from "./components/PublicFileDetails/PublicFileDetails";
 
 function App() {
   const token = useAuthStore((state) => state.accessToken);
@@ -51,11 +53,12 @@ function App() {
         ) : (
           <Routes>
             <Route path="/" element={<PublicFilesList />} />
-            <Route path="/:fileId" element={<FileDetails />} />
+            <Route path="/:fileId" element={<PublicFileDetails />} />
 
             <Route element={<ProtectedRoute />}>
               <Route path="/upload" element={<Upload />} />
-              <Route path="/my_files" element={<UserFilesList />} />
+              <Route path="/my_files" element={<UserFileList />} />
+              <Route path="/my_files/:fileId" element={<UserFileDetails />} />
             </Route>
           </Routes>
         )}
