@@ -21,7 +21,7 @@ interface FileStore {
 }
 
 export const useFileStore = create<FileStore>((set) => ({
-  isLoading: true,
+  isLoading: false,
 
   setIsLoading: (loading: boolean) => {
     set({ isLoading: loading });
