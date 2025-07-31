@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
-import path from "path";
 
 import authRoutes from "./routes/auth.routes";
 import fileRoutes from "./routes/file.routes";

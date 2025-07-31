@@ -11,8 +11,10 @@ import {
 import { NODE_ENV } from "../config/config";
 
 export const register = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
   try {
+    email = email.toLowerCase();
+
     const existing = await User.findOne({ email });
     if (existing) {
       res.status(400).json({
@@ -34,8 +36,10 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
   try {
+    email = email.toLowerCase();
+
     const user = await User.findOne({ email });
 
     if (!user || !(await user.comparePassword(password))) {

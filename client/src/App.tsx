@@ -9,7 +9,6 @@ import { useFileStore } from "./store/useFileStore";
 import Header from "./components/Header/Header";
 import Upload from "./components/Upload/Upload";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-import FileDetails from "./components/User/UserFiles/UserFileDetails/UserFileDetails";
 import AuthModal from "./components/AuthModal/AuthModal";
 import PublicFilesList from "./components/PublicFilesList/PublicFilesList";
 import UserFileList from "./components/User/UserFiles/UserFileList/UserFileList";
