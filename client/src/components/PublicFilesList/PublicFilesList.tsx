@@ -33,7 +33,7 @@ const PublicFilesList = () => {
     );
   }
 
-  if (files.length === 0) {
+  if (!files || files.length === 0) {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center text-2xl">
