@@ -90,7 +90,7 @@ export const getPublicFileList = async (req: Request, res: Response) => {
   try {
     const files = await File.find({ isPublic: true })
       .sort({ createdAt: -1 })
-      .select("-user -__v");
+      .select("-__v");
 
     res.status(200).json({ files });
     return;

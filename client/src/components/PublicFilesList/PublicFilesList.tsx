@@ -6,6 +6,7 @@ import { useFileStore } from "../../store/useFileStore";
 import { File } from "../../types/files";
 
 import FilesListItem from "../FileListItem/FileListItem";
+import { useAuthStore } from "../../store/useAuthStore";
 
 const PublicFilesList = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -14,11 +15,14 @@ const PublicFilesList = () => {
   const isLoading = useFileStore((state) => state.isLoading);
   const setIsLoading = useFileStore((state) => state.setIsLoading);
 
+  const userId = useAuthStore((state) => state.userId);
+
   const getFiles = async () => {
     const response = await fetchFileList(true);
     setFiles(response);
     console.log("Files uploaded successfully");
     setIsLoading(false);
+    console.log(response);
   };
 
   useEffect(() => {
@@ -49,7 +53,11 @@ const PublicFilesList = () => {
       <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
         {files.map((file) => (
           <li key={file._id}>
-            <Link to={`/${file._id}`}>
+            <Link
+              to={
+                userId === file.user ? `/my_files/${file._id}` : `/${file._id}`
+              }
+            >
               <FilesListItem file={file} isPublic={true} />
             </Link>
           </li>
