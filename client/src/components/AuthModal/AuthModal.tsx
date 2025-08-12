@@ -17,6 +17,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   if (!isOpen) return null;
 
   const handleOnClose = (): void => {
@@ -48,11 +50,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             switchTo={switchToRegister}
             onClose={handleOnClose}
             successMessage={successMessage}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
           />
         ) : (
           <Register
             switchTo={switchToLogin}
             setSuccessMessage={setSuccessMessage}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
           />
         )}
       </div>
@@ -64,12 +70,16 @@ interface LoginFormProps {
   switchTo: () => void;
   onClose: () => void;
   successMessage: string | null;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
 }
 
 const Login: React.FC<LoginFormProps> = ({
   switchTo,
   onClose,
   successMessage,
+  isLoading,
+  setIsLoading,
 }) => {
   const {
     register,
@@ -84,6 +94,7 @@ const Login: React.FC<LoginFormProps> = ({
 
   const onSubmit = async (data: LoginData) => {
     try {
+      setIsLoading(true);
       const response = await loginUser(data);
       const token = response.data.accessToken;
       setToken(token);
@@ -101,6 +112,8 @@ const Login: React.FC<LoginFormProps> = ({
       } else {
         console.error(error);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -138,9 +151,21 @@ const Login: React.FC<LoginFormProps> = ({
             className="border p-2 rounded "
           />
         </div>
+
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+            <div className="spinner"></div>
+          </div>
+        )}
+
         <button
           type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          className={` text-white py-2 px-4 rounded  ${
+            isLoading
+              ? "bg-blue-400 cursor-not-allowed hover:bg-blue-400"
+              : "bg-blue-500 hover:bg-blue-600"
+          }`}
+          disabled={isLoading}
         >
           Login
         </button>
@@ -159,11 +184,15 @@ const Login: React.FC<LoginFormProps> = ({
 interface RegisterFormProps {
   switchTo: () => void;
   setSuccessMessage: (message: string) => void;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
 }
 
 const Register: React.FC<RegisterFormProps> = ({
   switchTo,
   setSuccessMessage,
+  isLoading,
+  setIsLoading,
 }) => {
   const {
     register,
@@ -176,6 +205,7 @@ const Register: React.FC<RegisterFormProps> = ({
 
   const onSubmit = async (data: RegisterData) => {
     try {
+      setIsLoading(true);
       const response = await registerUser(data);
       setSuccessMessage?.(response.data.message);
       switchTo();
@@ -192,6 +222,8 @@ const Register: React.FC<RegisterFormProps> = ({
       } else {
         console.error(error);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -248,9 +280,20 @@ const Register: React.FC<RegisterFormProps> = ({
           )}
         </div>
 
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+            <div className="spinner"></div>
+          </div>
+        )}
+
         <button
           type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          className={` text-white py-2 px-4 rounded  ${
+            isLoading
+              ? "bg-blue-400 cursor-not-allowed hover:bg-blue-400"
+              : "bg-blue-500 hover:bg-blue-600"
+          }`}
+          disabled={isLoading}
         >
           Register
         </button>
