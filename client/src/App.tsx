@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { refreshToken } from "./api/apiAuth";
 
@@ -18,10 +18,11 @@ import PublicFileDetails from "./components/PublicFileDetails/PublicFileDetails"
 function App() {
   const token = useAuthStore((state) => state.accessToken);
   const setToken = useAuthStore((state) => state.setToken);
-  const isLoading = useFileStore((state) => state.isLoading);
-  const setIsLoading = useFileStore((state) => state.setIsLoading);
   const isAuthOpen = useAuthStore((state) => state.isAuthOpen);
   const setIsAuthOpen = useAuthStore((state) => state.setIsAuthOpen);
+
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const setIsLoading = useAuthStore((state) => state.setIsLoading);
 
   const handleTokenRefresh = async () => {
     try {

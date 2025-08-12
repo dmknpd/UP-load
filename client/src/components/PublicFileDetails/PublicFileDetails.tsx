@@ -17,8 +17,7 @@ const PublicFileDetails = () => {
 
   const fetchFile = useFileStore((state) => state.fetchFile);
 
-  const isLoading = useFileStore((state) => state.isLoading);
-  const setIsLoading = useFileStore((state) => state.setIsLoading);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const getFile = async () => {
     if (!fileId) return;
@@ -42,9 +41,7 @@ const PublicFileDetails = () => {
 
   useEffect(() => {
     if (fileId) {
-      setIsLoading(true);
       getFile();
-      setIsLoading(false);
     }
 
     return () => {
@@ -56,7 +53,9 @@ const PublicFileDetails = () => {
 
   useEffect(() => {
     if (file) {
+      setIsLoading(true);
       getImg();
+      setIsLoading(false);
     }
 
     return () => {

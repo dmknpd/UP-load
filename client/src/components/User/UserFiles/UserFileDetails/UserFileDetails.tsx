@@ -22,8 +22,7 @@ const UserFileDetails = () => {
 
   const fetchFile = useFileStore((state) => state.fetchFile);
 
-  const isLoading = useFileStore((state) => state.isLoading);
-  const setIsLoading = useFileStore((state) => state.setIsLoading);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [fileSuccess, setFileSuccess] = useState<string>("");
   const [fileError, setFileError] = useState<string>("");

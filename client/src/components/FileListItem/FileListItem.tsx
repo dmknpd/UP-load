@@ -14,6 +14,8 @@ const FilesListItem: React.FC<Props> = ({ file, isPublic = false }) => {
   const { fetchImage } = useFileStore();
   const [imgUrl, setImgUrl] = useState<string>(fileImg);
 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const getImg = async () => {
     if (!file) return;
 
@@ -23,7 +25,9 @@ const FilesListItem: React.FC<Props> = ({ file, isPublic = false }) => {
 
   useEffect(() => {
     if (file) {
+      setIsLoading(true);
       getImg();
+      setIsLoading(false);
     }
 
     return () => {
@@ -34,7 +38,13 @@ const FilesListItem: React.FC<Props> = ({ file, isPublic = false }) => {
   return (
     <div className="border-2 rounded-lg hover:border-blue-500 overflow-hidden h-full shadow-sm p-4 flex flex-col items-center justify-between gap-2">
       <div className="flex items-center h-full">
-        <img src={imgUrl} alt="File" />
+        {isLoading ? (
+          <div className="h-full flex items-center justify-center">
+            <div className="spinner"></div>
+          </div>
+        ) : (
+          <img src={imgUrl} alt="File" />
+        )}
       </div>
       <p
         className="text-sm text-gray-700 break-words text-center"
