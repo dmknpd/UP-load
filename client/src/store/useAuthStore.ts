@@ -13,6 +13,9 @@ interface AuthState {
   userId: string | null;
   email: string | null;
   isAuthOpen: boolean;
+
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
   setToken: (token: string) => void;
 
   setIsAuthOpen: (auth: boolean) => void;
@@ -25,6 +28,12 @@ export const useAuthStore = create<AuthState>((set) => ({
   email: null,
 
   isAuthOpen: false,
+
+  isLoading: true,
+
+  setIsLoading: (loading: boolean) => {
+    set({ isLoading: loading });
+  },
 
   setToken: (token: string) => {
     try {

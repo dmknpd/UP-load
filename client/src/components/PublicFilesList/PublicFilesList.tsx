@@ -12,8 +12,7 @@ const PublicFilesList = () => {
   const [files, setFiles] = useState<File[]>([]);
   const fetchFileList = useFileStore((state) => state.fetchFileList);
 
-  const isLoading = useFileStore((state) => state.isLoading);
-  const setIsLoading = useFileStore((state) => state.setIsLoading);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const userId = useAuthStore((state) => state.userId);
 
@@ -22,7 +21,6 @@ const PublicFilesList = () => {
     setFiles(response);
     console.log("Files uploaded successfully");
     setIsLoading(false);
-    console.log(response);
   };
 
   useEffect(() => {

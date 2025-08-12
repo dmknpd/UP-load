@@ -11,8 +11,7 @@ const UserFileList = () => {
   const [files, setFiles] = useState<File[]>([]);
   const fetchFileList = useFileStore((state) => state.fetchFileList);
 
-  const isLoading = useFileStore((state) => state.isLoading);
-  const setIsLoading = useFileStore((state) => state.setIsLoading);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const getFiles = async () => {
     const response = await fetchFileList();
