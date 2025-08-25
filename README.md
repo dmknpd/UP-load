@@ -157,7 +157,8 @@ npm run start
     ```json
     {
       "email": "user@example.com",
-      "password": "yourpassword123"
+      "password": "yourpassword123",
+      "confirmPassword": "yourpassword123"
     }
     ```
 
